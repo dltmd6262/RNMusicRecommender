@@ -1,6 +1,6 @@
 'use strict';
 
-import React from "react-native";
+import React from 'react';
 import { connect } from 'react-redux'
 import {fetchNewsfeedData, updateAddResult, addNewMusic } from '../actions/newsfeed';
 

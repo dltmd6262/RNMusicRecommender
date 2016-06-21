@@ -1,17 +1,16 @@
-import React from 'react-native';
-import Styles from '../../styles';
+import React, {Component} from 'react';
+import ReactNative from 'react-native';
 import Shapes from '../../shapes/cssShapes';
 import AddMusicForm from './addMusicForm';
 
 var {
-  View,
   Text,
   TouchableOpacity,
   LayoutAnimation,
   Dimensions,
-} = React;
+} = ReactNative;
 
-class AddMusicLayer extends React.Component {
+class AddMusicLayer extends Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,17 +1,17 @@
 'use strict';
 
-import React from 'react-native';
+import Promise from 'bluebird';
+import React from 'react';
+import ReactNative from 'react-native';
 import NewsfeedCard from './newsfeedCard';
 import AddMusicLayer from './addMusicLayer';
-import RefreshableListView from 'react-native-refreshable-listview';
+import RefreshableListView from '../refreshableListView';
 
 var {
   View,
   ListView,
   Dimensions,
-} = React;
-
-var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+} = ReactNative;
 
 var createNewsfeedCards = (d, i) => {
   return (
@@ -24,16 +24,12 @@ var createNewsfeedCards = (d, i) => {
 };
 
 var Newsfeed = ({newsfeedCardData, fetchNewsfeedData, addNewsfeedResult, addNewMusic}) => {
-  let winHeight = Dimensions.get('window').height;
-
   return (
     <View style={{flex: 1}}>
       <RefreshableListView
-        style={{height: winHeight, backgroundColor: '#faf2e8'}}
-        dataSource={ds.cloneWithRows(newsfeedCardData)}
+        onRefresh={fetchNewsfeedData}
         renderRow={createNewsfeedCards}
-        refreshDescription='Refreshing'
-        loadData={fetchNewsfeedData}
+        data={newsfeedCardData}
       />
       <AddMusicLayer
         pos={{bottom: 10, right: 10}}

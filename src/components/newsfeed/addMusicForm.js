@@ -1,4 +1,5 @@
-import React from 'react-native';
+import {Component} from 'react';
+import ReactNative from 'react-native';
 import Styles from '../../styles';
 
 var {
@@ -7,7 +8,7 @@ var {
   View,
   TouchableOpacity,
   StyleSheet,
-} = React;
+} = ReactNative;
 
 const c = {
   formFields: [
@@ -48,7 +49,7 @@ var s = StyleSheet.create({
   },
 });
 
-class AddMusicForm extends React.Component {
+class AddMusicForm extends Component {
   constructor(props) {
     super(props);
     this.state = {

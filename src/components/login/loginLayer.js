@@ -1,4 +1,7 @@
-import React from 'react-native';
+'use strict';
+
+import React, {Component} from 'react';
+import ReactNative from 'react-native';
 import Styles from '../../styles';
 
 var {
@@ -7,9 +10,9 @@ var {
   TouchableOpacity,
   View,
   StyleSheet,
-} = React;
+} = ReactNative;
 
-class LoginPage extends React.Component {
+class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
