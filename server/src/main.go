@@ -1,17 +1,22 @@
 package main
 
 import (
+  "flag"
   "fmt"
   "github.com/codegangsta/negroni"
   "github.com/gorilla/mux"
   "./user"
   "./newsfeed"
   "./di"
+  "./config"
   mgo "gopkg.in/mgo.v2"
 )
 
 func main() {
-  session, err := mgo.Dial("192.168.99.100:32770")
+  mode := flag.String("mode", "DEV", "Mode of server")
+  config.BuildGlobalConfig(*mode);
+
+  session, err := mgo.Dial(config.GlobalConfig.Mongo)
   if err != nil {
     fmt.Printf("%v", err)
     return
