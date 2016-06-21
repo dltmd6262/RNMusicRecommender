@@ -1,7 +1,8 @@
 'use strict';
 
 import _ from 'lodash';
-import React from 'react-native';
+import React from 'react';
+import ReactNative from 'react-native';
 import Shapes from '../../shapes/cssShapes';
 import Styles from '../../styles';
 
@@ -9,7 +10,7 @@ let {
   Text,
   View,
   TouchableOpacity,
-} = React;
+} = ReactNative;
 
 let NewsfeedCard = ({title, artist, instrument}) => {
   let cardTitle = _.template('<%=title%> - <%=artist%>')({title, artist});

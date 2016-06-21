@@ -1,6 +1,5 @@
 'use strict';
 
-import Promise from 'bluebird';
 import React from 'react';
 import ReactNative from 'react-native';
 import NewsfeedCard from './newsfeedCard';
@@ -9,8 +8,6 @@ import RefreshableListView from '../refreshableListView';
 
 var {
   View,
-  ListView,
-  Dimensions,
 } = ReactNative;
 
 var createNewsfeedCards = (d, i) => {

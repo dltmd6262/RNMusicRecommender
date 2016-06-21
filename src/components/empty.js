@@ -1,10 +1,13 @@
-import React from 'react-native';
+'use strict';
+
+import React from 'react';
+import ReactNative from 'react-native';
 import Styles from '../styles';
 
 var {
   Text,
   View,
-} = React;
+} = ReactNative;
 
 var Empty = () => {
   return (
