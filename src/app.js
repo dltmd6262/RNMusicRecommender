@@ -27,10 +27,10 @@ const AppWithStore = () => {
   return (
     <Provider store={store}>
       <ScrollableTabView
-        tabBarUnderlineColor='ca6144'
-        tabBarBackgroundColor='e9e6c9'
-        tabBarActiveTextColor='ca6144'
-        tabBarInactiveTextColor='e0b58c'>
+        tabBarUnderlineColor='#ca6144'
+        tabBarBackgroundColor='#e9e6c9'
+        tabBarActiveTextColor='#ca6144'
+        tabBarInactiveTextColor='#e0b58c'>
         <Newsfeed tabLabel='Newsfeed'/>
         <Login tabLabel='Profile'/>
       </ScrollableTabView>

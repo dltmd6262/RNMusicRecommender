@@ -5,6 +5,7 @@ import ReactNative from 'react-native';
 import NewsfeedCard from './newsfeedCard';
 import AddMusicLayer from './addMusicLayer';
 import RefreshableListView from '../refreshableListView';
+import Styles from '../../styles';
 
 var {
   View,
@@ -22,7 +23,7 @@ var createNewsfeedCards = (d, i) => {
 
 var Newsfeed = ({newsfeedCardData, fetchNewsfeedData, addNewsfeedResult, addNewMusic}) => {
   return (
-    <View style={{flex: 1}}>
+    <View style={Styles.container}>
       <RefreshableListView
         onRefresh={fetchNewsfeedData}
         renderRow={createNewsfeedCards}

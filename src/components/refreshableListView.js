@@ -39,6 +39,7 @@ class RefreshableListView extends Component {
         }
         dataSource={this.state.dataSource.cloneWithRows(this.props.data)}
         renderRow={this.props.renderRow}
+        style={{width: 400}}
       />
     )
   }
