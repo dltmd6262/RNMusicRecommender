@@ -9,7 +9,6 @@ import NewsfeedView from '../components/newsfeed/newsfeed';
 const mapStateToProps = (state) => {
   return {
     newsfeedCardData: state.Newsfeed.newsfeedCardData,
-    isRefreshing: state.Newsfeed.isRefreshing,
     addNewsfeedResult: state.Newsfeed.addNewsfeedResult,
   };
 };

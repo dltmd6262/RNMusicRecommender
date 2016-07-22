@@ -6,10 +6,9 @@ import Config from '../config';
 
 // Update newsfeed data
 export const UPDATE_NEWSFEED_CARDS = 'UPDATE_NEWSFEED_CARDS';
-export const updateNewsfeedCards = (snapshot, error, isRefreshing) => {
+export const updateNewsfeedCards = (snapshot, error) => {
   return {
     type: UPDATE_NEWSFEED_CARDS,
-    isRefreshing: isRefreshing,
     newsfeedSnapshot: snapshot,
     fetchNewsfeedError: error,
   };

@@ -3,18 +3,18 @@
   "version": "0.0.2",
   "private": true,
   "scripts": {
-    "start": "react-native start",
+    "start-with-cache": "react-native start",
+    "start": "./node_modules/react-native/packager/packager.sh start --reset-cache",
     "clean": "find ./node_modules -name react-packager -prune -o -name '.babelrc' -print | xargs rm -f",
     "postinstall": "npm run clean",
     "test": "mocha --compilers js:babel-core/register -c -t 10000 --check-leaks ./src/test"
   },
   "dependencies": {
     "bluebird": "^3.3.3",
-    "chai": "^3.5.0",
     "co": "^4.6.0",
     "lodash": "^4.3.0",
     "react": "^15.1.0",
-    "react-native": "^0.27.2",
+    "react-native": "^0.30.0",
     "react-native-scrollable-tab-view": "^0.5.0",
     "react-redux": "^4.0.0",
     "redux": "^3.5.2",
@@ -25,8 +25,9 @@
     "babel-core": "^6.11.4",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
+    "babel-preset-react-native-stage-0": "^1.0.1",
     "babel-preset-stage-0": "^6.5.0",
-    "chalk": "^1.1.3",
+    "chai": "^3.5.0",
     "debug": "^2.0.0",
     "eslint": "^2.6.0"
   }

@@ -14,7 +14,7 @@ import (
 
 func main() {
   mode := flag.String("mode", "DEV", "Mode of server")
-  config.BuildGlobalConfig(*mode);
+  config.BuildGlobalConfig(*mode)
 
   session, err := mgo.Dial(config.GlobalConfig.Mongo)
   if err != nil {

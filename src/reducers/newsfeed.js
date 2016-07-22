@@ -6,7 +6,6 @@ const newsfeed = (state = {}, action) => {
     case UPDATE_NEWSFEED_CARDS:
       return {
         ...state,
-        isRefreshing: false,
         newsfeedCardData: [...action.newsfeedSnapshot],
       };
 
