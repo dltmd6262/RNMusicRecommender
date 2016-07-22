@@ -4,6 +4,7 @@ import co from 'co';
 import NewsfeedSnapshot from '../snapshots/newsfeed';
 import Config from '../config';
 
+// Update newsfeed data
 export const UPDATE_NEWSFEED_CARDS = 'UPDATE_NEWSFEED_CARDS';
 export const updateNewsfeedCards = (snapshot, error, isRefreshing) => {
   return {
@@ -14,6 +15,7 @@ export const updateNewsfeedCards = (snapshot, error, isRefreshing) => {
   };
 };
 
+// Update newsfeed data with the new card that the user created
 export const UPDATE_ADD_RESULT = 'UPDATE_ADD_RESULT';
 export const updateAddResult = (result) => {
   return {
@@ -22,6 +24,7 @@ export const updateAddResult = (result) => {
   };
 };
 
+// API call to get all newsfeed data
 export const fetchNewsfeedData = () => {
   return function (dispatch) {
     return co(function *() {
@@ -37,6 +40,7 @@ export const fetchNewsfeedData = () => {
   };
 };
 
+// API call to add new music card
 export const addNewMusic = (data) => {
   return function (dispatch) {
     return co(function *() {

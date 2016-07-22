@@ -4,6 +4,7 @@ import co from 'co';
 import Config from '../config';
 import {httpGet, httpPost} from '../../common/api';
 
+// Set user id of user in state
 export const SET_UID = 'SET_UID';
 export const setUID = (userData) => {
   return {
@@ -12,6 +13,7 @@ export const setUID = (userData) => {
   };
 };
 
+// Login user with the given email and password
 export const login = (email, password) => {
   return function (dispatch) {
     return co(function *() {
@@ -19,13 +21,12 @@ export const login = (email, password) => {
         body: JSON.stringify({email, password}),
       });
 
-      if (res.ok && res.text !== '') {
-        dispatch(setUID({uid: res.text}));
-      }
+      if (res.ok && res.text !== '') dispatch(setUID({uid: res.text}));
     });
   };
 };
 
+// Create new user with the given email and password
 export const createUser = (email, password) => {
   return function (dispatch) {
     return co(function *() {
@@ -33,9 +34,7 @@ export const createUser = (email, password) => {
         body: JSON.stringify({email, password}),
       });
 
-      if (res.ok && res.text !== '') {
-        dispatch(setUID({uid: res.text}));
-      }
+      if (res.ok && res.text !== '') dispatch(setUID({uid: res.text}));
     });
   };
 };

@@ -16,18 +16,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchNewsfeedData: () => {
-      dispatch(fetchNewsfeedData());
-    },
-    addNewMusic: (data) => {
-      dispatch(addNewMusic(data));
-    },
+    fetchNewsfeedData: () => {dispatch(fetchNewsfeedData())},
+    addNewMusic: (data) => {dispatch(addNewMusic(data))},
   };
 };
 
-const NewsFeed = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(NewsfeedView);
-
-export default NewsFeed

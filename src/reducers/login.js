@@ -2,6 +2,7 @@ import { SET_UID } from '../actions/login';
 
 const login = (state = {}, action) => {
   switch (action.type) {
+    // Set user id
     case SET_UID:
       return {
         ...state,

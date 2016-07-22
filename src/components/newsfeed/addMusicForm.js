@@ -18,37 +18,6 @@ const c = {
   ],
 };
 
-var s = StyleSheet.create({
-  form: {
-    height: 40,
-    borderColor: '#faf2e8',
-    marginTop: 10,
-    marginRight: 10,
-    marginLeft: 10,
-    borderWidth: 1,
-  },
-  formTitle: {
-    marginTop: 10,
-    color: '#faf2e8',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  button: {
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 50,
-    height: 50,
-    width: 100,
-    backgroundColor: '#fcdfa9',
-  },
-  buttonTitle: {
-    color: '#9e7c6e',
-    fontSize: 15,
-  },
-});
-
 class AddMusicForm extends Component {
   constructor(props) {
     super(props);
@@ -114,5 +83,36 @@ class AddMusicForm extends Component {
     }
   }
 }
+
+var s = StyleSheet.create({
+  form: {
+    height: 40,
+    borderColor: '#faf2e8',
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    borderWidth: 1,
+  },
+  formTitle: {
+    marginTop: 10,
+    color: '#faf2e8',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  button: {
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 50,
+    height: 50,
+    width: 100,
+    backgroundColor: '#fcdfa9',
+  },
+  buttonTitle: {
+    color: '#9e7c6e',
+    fontSize: 15,
+  },
+});
 
 export default AddMusicForm;

@@ -38,6 +38,7 @@ const AppWithStore = () => {
   )
 };
 
+// Initial db call for newsfeed data
 store.dispatch(fetchNewsfeedData());
 
 export default AppWithStore;

@@ -12,18 +12,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    login: (email, password) => {
-      dispatch(login(email, password));
-    },
-    createUser: (email, password) => {
-      dispatch(createUser(email, password));
-    },
+    login: (email, password) => {dispatch(login(email, password))},
+    createUser: (email, password) => {dispatch(createUser(email, password))},
   };
 };
 
-const Login = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LoginView);
-
-export default Login
