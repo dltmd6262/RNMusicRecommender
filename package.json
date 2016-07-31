@@ -8,7 +8,7 @@
     "clean": "find ./node_modules -name react-packager -prune -o -name '.babelrc' -print | xargs rm -f",
     "postinstall": "npm run clean",
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register -c -t 10000 --check-leaks ./src/test",
-    "test-cov": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register -R spec src/test"
+    "test-cov": "./node_modules/.bin/istanbul --config=./.istanbul.yml cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register -R spec src/test"
   },
   "dependencies": {
     "bluebird": "^3.3.3",

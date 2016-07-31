@@ -1,0 +1,2 @@
+instrumentation:
+  excludes: ['**/src/actions/**', '**/src/snapshots/**', '**/common/**']
