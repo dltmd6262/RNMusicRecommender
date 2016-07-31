@@ -7,13 +7,14 @@
     "start": "./node_modules/react-native/packager/packager.sh start --reset-cache",
     "clean": "find ./node_modules -name react-packager -prune -o -name '.babelrc' -print | xargs rm -f",
     "postinstall": "npm run clean",
-    "test": "mocha --compilers js:babel-core/register -c -t 10000 --check-leaks ./src/test"
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register -c -t 10000 --check-leaks ./src/test",
+    "test-cov": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register -R spec src/test"
   },
   "dependencies": {
     "bluebird": "^3.3.3",
     "co": "^4.6.0",
     "lodash": "^4.3.0",
-    "react": "^15.1.0",
+    "react": "^15.3.0",
     "react-native": "^0.30.0",
     "react-native-scrollable-tab-view": "^0.5.0",
     "react-redux": "^4.0.0",
@@ -28,6 +29,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "babel-preset-stage-0": "^6.5.0",
+    "babel-preset-stage-1": "^6.5.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.12",
     "debug": "^2.0.0",

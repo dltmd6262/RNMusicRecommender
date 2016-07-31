@@ -1,7 +1,7 @@
 import React from 'react-native';
 let {StyleSheet} = React;
 
-export default styles = StyleSheet.create({
+export default StyleSheet.create({
 
   // default styles
   container: {
