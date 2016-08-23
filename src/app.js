@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { UIManager, Platform } from 'react-native';
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import Reducer from './reducers/index';
@@ -20,6 +21,10 @@ let initialState = {
     uid: null,
   },
 };
+
+if (Platform.OS === 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 let store = createStore(Reducer, initialState, applyMiddleware(thunk));
 
