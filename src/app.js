@@ -32,6 +32,7 @@ const AppWithStore = () => {
   return (
     <Provider store={store}>
       <ScrollableTabView
+        style={{backgroundColor: '#faf2e8'}}
         tabBarUnderlineColor='#ca6144'
         tabBarBackgroundColor='#e9e6c9'
         tabBarActiveTextColor='#ca6144'

@@ -1,0 +1,17 @@
+[package]
+name = "server"
+version = "0.1.0"
+authors = ["Kevin Han <dltmd6262@kaist.ac.kr>"]
+
+[dependencies]
+iron = "*"
+router = "*"
+bodyparser = "*"
+time = "*"
+serde = "*"
+serde_json = "*"
+serde_macros = "*"
+ascii = "*"
+
+[dependencies.rethinkdb]
+git = "https://github.com/tomprogrammer/rust-rethinkdb"
