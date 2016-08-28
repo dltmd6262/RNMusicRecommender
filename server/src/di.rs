@@ -1,5 +1,5 @@
-use rethinkdb::Client;
+use postgres::Connection;
 
 pub struct DI {
-    pub Rdb: Client,
+    pub postgres: Connection,
 }

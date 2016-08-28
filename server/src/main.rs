@@ -3,28 +3,22 @@
 
 extern crate iron;
 extern crate router;
-extern crate rethinkdb;
-extern crate ascii;
+extern crate postgres;
 
 mod user;
 mod newsfeed;
 mod di;
 
 use di::{DI};
+use postgres::{Connection, SslMode};
 use iron::prelude::*;
 use router::Router;
-use rethinkdb::Client;
-use ascii::AsAsciiStr;
 use std::sync::{Arc, Mutex};
 
 fn main() {
-    let mut rethinkDB: Client = Client::connect("127.0.0.1:28015",  "".as_ascii_str().unwrap()).unwrap_or_else(|e| {
-        println!("Error connecting to Rethink DB: {:?}", e);
-        panic!(e);
-    });
-
+    let conn = Connection::connect("postgres://postgres@localhost", SslMode::None).unwrap();
     let di_instance = Arc::new(Mutex::new(DI{
-        Rdb: rethinkDB
+        postgres: conn
     }));
 
     let mut router = Router::new();

@@ -11,7 +11,4 @@ time = "*"
 serde = "*"
 serde_json = "*"
 serde_macros = "*"
-ascii = "*"
-
-[dependencies.rethinkdb]
-git = "https://github.com/tomprogrammer/rust-rethinkdb"
+postgres = "*"
