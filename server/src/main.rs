@@ -10,22 +10,29 @@ mod user;
 mod newsfeed;
 mod di;
 
-use di::{DI, init_DI};
+use di::{DI};
 use iron::prelude::*;
 use router::Router;
+use rethinkdb::Client;
+use ascii::AsAsciiStr;
+use std::sync::{Arc, Mutex};
 
 fn main() {
-    let di_instance: &'static DI = init_DI();
+    let mut rethinkDB: Client = Client::connect("127.0.0.1:28015",  "".as_ascii_str().unwrap()).unwrap_or_else(|e| {
+        println!("Error connecting to Rethink DB: {:?}", e);
+        panic!(e);
+    });
 
-    let dd = newsfeed::get_newsfeed(di_instance);
-    let gg = newsfeed::post_newsfeed(di_instance);
+    let di_instance = Arc::new(Mutex::new(DI{
+        Rdb: rethinkDB
+    }));
 
     let mut router = Router::new();
-    router.get("/newsfeed", dd);
-    router.post("/newsfeed", gg);
+    router.get("/newsfeed", newsfeed::get_newsfeed(&di_instance));
+    router.post("/newsfeed", newsfeed::post_newsfeed(&di_instance));
 
-    router.post("/user/login", user::login);
-    router.post("/user/signup", user::signup);
+    router.post("/user/login", user::login(&di_instance));
+    router.post("/user/signup", user::signup(&di_instance));
 
     Iron::new(router).http("localhost:3000").unwrap();
 }
