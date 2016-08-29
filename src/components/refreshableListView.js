@@ -7,6 +7,7 @@ import ReactNative from 'react-native';
 let {
   ListView,
   RefreshControl,
+  Dimensions,
 } = ReactNative;
 
 class RefreshableListView extends Component {
@@ -39,7 +40,7 @@ class RefreshableListView extends Component {
         }
         dataSource={this.state.dataSource.cloneWithRows(this.props.data)}
         renderRow={this.props.renderRow}
-        style={{width: 400}}
+        style={{width: Dimensions.get('window').width}}
       />
     )
   }
