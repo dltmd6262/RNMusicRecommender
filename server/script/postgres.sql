@@ -7,3 +7,10 @@ CREATE TABLE rp.newsfeed (
   artist TEXT,
   inst TEXT
 );
+
+DROP TABLE IF EXISTS rp.user CASCADE;
+CREATE TABLE rp.user (
+  id SERIAL PRIMARY KEY,
+  uid TEXT,
+  pw TEXT
+);

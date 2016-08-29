@@ -60,8 +60,6 @@ pub fn post_newsfeed(di: &Arc<Mutex<DI>>) -> Box<Handler> {
             }
         };
 
-        println!("5353 {:?}", parsed_body);
-
         let locked_di = di_ref.lock().unwrap();
 
         let insert_statement = "INSERT INTO rp.newsfeed (title, artist, inst) VALUES ($1, $2, $3)";
