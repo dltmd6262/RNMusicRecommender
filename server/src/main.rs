@@ -8,6 +8,7 @@ extern crate postgres;
 mod user;
 mod newsfeed;
 mod di;
+mod models;
 
 use di::{DI};
 use postgres::{Connection, SslMode};

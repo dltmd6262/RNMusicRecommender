@@ -1,0 +1,9 @@
+CREATE SCHEMA IF NOT EXISTS rp;
+
+DROP TABLE IF EXISTS rp.newsfeed CASCADE;
+CREATE TABLE rp.newsfeed (
+  id SERIAL PRIMARY KEY,
+  title TEXT,
+  artist TEXT,
+  inst TEXT
+);
