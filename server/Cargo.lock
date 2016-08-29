@@ -9,6 +9,7 @@ dependencies = [
  "serde 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "stainless 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -345,6 +346,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "stainless"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "time"
 version = "0.1.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -470,6 +476,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum serde_json 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)" = "0e10f8a9d94b06cf5d3bef66475f04c8ff90950f1be7004c357ff9472ccbaebc"
 "checksum serde_macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)" = "eb0277415035d6914776590aecd31e2b63fe39bd1da6de5c08ca42fb58054bef"
 "checksum solicit 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "172382bac9424588d7840732b250faeeef88942e37b6e35317dce98cafdd75b2"
+"checksum stainless 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)" = "08dc26c706efcaefc81e3a200beca1546bdf2f0692e41730dfb9577d9bb5da5c"
 "checksum time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)" = "3c7ec6d62a20df54e07ab3b78b9a3932972f4b7981de295563686849eb3989af"
 "checksum traitobject 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "07eaeb7689bb7fca7ce15628319635758eda769fed481ecfe6686ddef2600616"
 "checksum traitobject 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "9dc23794ff47c95882da6f9d15de9a6be14987760a28cc0aafb40b7675ef09d8"

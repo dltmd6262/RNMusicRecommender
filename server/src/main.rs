@@ -1,5 +1,6 @@
 #![feature(plugin, custom_derive, box_syntax)]
 #![plugin(serde_macros)]
+#![cfg_attr(test, plugin(stainless))]
 
 extern crate iron;
 extern crate router;
@@ -10,17 +11,12 @@ mod newsfeed;
 mod di;
 mod models;
 
-use di::{DI};
-use postgres::{Connection, SslMode};
+use di::init_di;
 use iron::prelude::*;
 use router::Router;
-use std::sync::{Arc, Mutex};
 
 fn main() {
-    let conn = Connection::connect("postgres://postgres@localhost", SslMode::None).unwrap();
-    let di_instance = Arc::new(Mutex::new(DI{
-        postgres: conn
-    }));
+    let di_instance = init_di();
 
     let mut router = Router::new();
     router.get("/newsfeed", newsfeed::get_newsfeed(&di_instance));

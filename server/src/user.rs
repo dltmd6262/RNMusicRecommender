@@ -33,7 +33,7 @@ pub fn login(di: &Arc<Mutex<DI>>) -> Box<Handler> {
         let duplicate = locked_di.postgres.query(&dup_query, &[]);
 
         if duplicate.is_err() {
-            println!("Error while checking DB", duplicate.err());
+            println!("Error while checking DB {:?}", duplicate.err());
             return Ok(Response::with((status::InternalServerError)))
         }
 
@@ -72,7 +72,7 @@ pub fn signup(di: &Arc<Mutex<DI>>) -> Box<Handler> {
         let duplicate = locked_di.postgres.query(&dup_query, &[]);
 
         if duplicate.is_err() {
-            println!("Error while checking DB", duplicate.err());
+            println!("Error while checking DB {:?}", duplicate.err());
             return Ok(Response::with((status::InternalServerError)))
         }
 

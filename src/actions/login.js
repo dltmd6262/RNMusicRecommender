@@ -17,8 +17,8 @@ export const setUID = (userData) => {
 export const login = (email, password) => {
   return function (dispatch) {
     return co(function *() {
-      let res = yield httpGet(Config.address + '/user/login', {
-        body: JSON.stringify({email, password}),
+      let res = yield httpPost(Config.address + '/user/login', {
+        body: JSON.stringify({id: email, password}),
       });
 
       if (res.ok && res.text !== '') dispatch(setUID({uid: res.text}));
@@ -31,7 +31,7 @@ export const createUser = (email, password) => {
   return function (dispatch) {
     return co(function *() {
       let res = yield httpPost(Config.address + '/user/signup', {
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({id: email, password}),
       });
 
       if (res.ok && res.text !== '') dispatch(setUID({uid: res.text}));

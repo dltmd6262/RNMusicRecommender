@@ -12,3 +12,6 @@ serde = "*"
 serde_json = "*"
 serde_macros = "*"
 postgres = "*"
+
+[dev-dependencies]
+stainless = "*"
