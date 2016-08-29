@@ -29,5 +29,5 @@ fn main() {
     router.post("/user/login", user::login(&di_instance));
     router.post("/user/signup", user::signup(&di_instance));
 
-    Iron::new(router).http("localhost:3000").unwrap();
+    Iron::new(router).http("0.0.0.0:3000").unwrap();
 }
