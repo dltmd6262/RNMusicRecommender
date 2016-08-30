@@ -11,6 +11,20 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {fetchNewsfeedData} from './actions/newsfeed';
 import Newsfeed from './containers/newsfeed';
 import Login from './containers/login';
+import {NativeModules} from 'react-native';
+
+// TODO
+// NativeModules.FileSystem.getFoldersWithMusic().then(f => {
+//   f = f.filter(folder => {
+//     return folder.files.length > 0;
+//   });
+//
+//   console.log(2121, f);
+//
+//   NativeModules.MusicPlayer.playNewMusic(f[0].files[1].path);
+//
+//   console.log(f[0].files[1]);
+// });
 
 let initialState = {
   Newsfeed: {
