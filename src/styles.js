@@ -17,6 +17,14 @@ export default StyleSheet.create({
     backgroundColor: '#1f5080',
   },
 
+  // Styles for file row (folder and music)
+  file: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 70,
+  },
+
   // Styles for cards in newsfeed
   card: {
     flex: 1,

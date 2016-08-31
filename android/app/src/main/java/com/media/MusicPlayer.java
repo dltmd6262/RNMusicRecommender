@@ -28,6 +28,10 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         Uri filePath = Uri.fromFile(new File(path));
         Log.w("com.media", filePath.toString());
         try {
+            if (this.currentMusic != null) {
+                this.currentMusic.release();
+            }
+
             this.currentMusic = MediaPlayer.create(this.getReactApplicationContext(), filePath);
             this.currentMusic.start();
         } catch (Exception e) {

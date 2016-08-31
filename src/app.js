@@ -9,9 +9,11 @@ import thunk from 'redux-thunk';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import {fetchNewsfeedData} from './actions/newsfeed';
+import {updateFileStructure} from './actions/files';
+
 import Newsfeed from './containers/newsfeed';
 import Login from './containers/login';
-import {NativeModules} from 'react-native';
+import Files from './containers/files';
 
 // TODO
 // NativeModules.FileSystem.getFoldersWithMusic().then(f => {
@@ -34,6 +36,9 @@ let initialState = {
   User: {
     uid: null,
   },
+  Files: {
+    files: [],
+  },
 };
 
 if (Platform.OS === 'android') {
@@ -51,8 +56,9 @@ const AppWithStore = () => {
         tabBarBackgroundColor='#e9e6c9'
         tabBarActiveTextColor='#ca6144'
         tabBarInactiveTextColor='#e0b58c'>
-        <Newsfeed tabLabel='Newsfeed'/>
-        <Login tabLabel='Profile'/>
+        <Files tabLabel="Music"/>
+        <Newsfeed tabLabel="Newsfeed"/>
+        <Login tabLabel="Profile"/>
       </ScrollableTabView>
     </Provider>
   )
@@ -60,5 +66,6 @@ const AppWithStore = () => {
 
 // Initial db call for newsfeed data
 store.dispatch(fetchNewsfeedData());
+store.dispatch(updateFileStructure());
 
 export default AppWithStore;
