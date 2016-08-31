@@ -24,7 +24,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    void playNewMusic(String path) {
+    public void playNewMusic(String path) {
         Uri filePath = Uri.fromFile(new File(path));
         Log.w("com.media", filePath.toString());
         try {
@@ -40,7 +40,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    void playCurrentMusic() {
+    public void playCurrentMusic() {
         if (this.currentMusic == null || this.currentMusic.isPlaying()) {
             Log.i("com.media", "No current music is set or is already playing.");
             return;
@@ -49,7 +49,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         this.currentMusic.start();
     }
 
-    void pauseCurrentMusic() {
+    public void pauseCurrentMusic() {
         if (this.currentMusic == null || !this.currentMusic.isPlaying()) {
             Log.i("com.media", "No current music is set or is not playing.");
             return;
