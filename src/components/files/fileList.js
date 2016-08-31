@@ -42,7 +42,9 @@ export default class FileList extends Component {
   }
 
   startPlayingMusic(filePath) {
-    return NativeModules.MusicPlayer.playNewMusic(filePath);
+    return NativeModules.MusicPlayer.playNewMusic(filePath).then(() => {
+      NativeModules.MusicPlayer.loopCurrentMusic();
+    });
   }
 
   render() {

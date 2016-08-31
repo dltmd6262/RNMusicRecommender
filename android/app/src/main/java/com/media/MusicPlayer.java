@@ -1,5 +1,10 @@
 package com.media;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
@@ -12,8 +17,22 @@ import java.io.File;
 
 public class MusicPlayer extends ReactContextBaseJavaModule {
 
+    private final BroadcastReceiver changeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.w("com.media", "1234");
+            if (intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+                MusicPlayer.this.pauseCurrentMusic();
+            }
+        }
+    };
+
     public MusicPlayer (ReactApplicationContext reactContext) {
         super(reactContext);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        reactContext.registerReceiver(this.changeReceiver, filter);
     }
 
     @Override public String getName() {
@@ -21,7 +40,6 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     }
 
     private MediaPlayer currentMusic = null;
-
 
     @ReactMethod
     public void playNewMusic(String path) {
@@ -49,6 +67,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         this.currentMusic.start();
     }
 
+    @ReactMethod
     public void pauseCurrentMusic() {
         if (this.currentMusic == null || !this.currentMusic.isPlaying()) {
             Log.i("com.media", "No current music is set or is not playing.");
@@ -56,5 +75,15 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         }
 
         this.currentMusic.pause();
+    }
+
+    @ReactMethod
+    public void loopCurrentMusic(Boolean loop) {
+        if (this.currentMusic == null) {
+            Log.i("com.media", "No music is playing to loop");
+            return;
+        }
+
+        this.currentMusic.setLooping(loop);
     }
 }
