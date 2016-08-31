@@ -18,7 +18,15 @@ export default class FileList extends Component {
     this.state = {
       currentFolder: null,
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-    }
+    };
+
+    BackAndroid.addEventListener('goBackToFolderList', () => {
+      this.setState({
+        currentFolder: null,
+      });
+
+      return true;
+    });
   }
 
   createSeparator() {
@@ -28,22 +36,12 @@ export default class FileList extends Component {
   }
 
   showMusicInFolder(folderName) {
-    BackAndroid.addEventListener('goBackToFolderList', () => {
-      BackAndroid.removeEventListener('goBackToFolderList');
-      this.setState({
-        currentFolder: null,
-      });
-
-      return true;
-    });
-
     this.setState({
       currentFolder: folderName,
     });
   }
 
   startPlayingMusic(filePath) {
-    console.log(4646, filePath);
     return NativeModules.MusicPlayer.playNewMusic(filePath);
   }
 
