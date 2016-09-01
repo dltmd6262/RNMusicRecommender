@@ -32,31 +32,31 @@ class App extends Component {
   render() {
     const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 
-    const playerBgOpacity = this.props.isShowingPlayer ? 0.8 : 0;
+    const playerBgOpacity = this.props.isShowingPlayer ? 1 : 0;
     const actionBtnRight = this.props.isShowingPlayer ? fullWidth / 2 - 30 : 50;
     const actionBtnBottom = this.props.isShowingPlayer ? 100 : 50;
 
     Animated.timing(
       this.state.playerBgOpacity, {
-        duration: 100,
+        duration: 200,
         toValue: playerBgOpacity,
-        easing: Easing.in(Easing.quad),
+        easing: Easing.in(Easing.cubic),
       }
     ).start();
 
     Animated.timing(
       this.state.btnAnimX, {
-        duration: 100,
+        duration: 200,
         toValue: actionBtnRight,
-        easing: Easing.in(Easing.quad),
+        easing: Easing.in(Easing.cubic),
       }
     ).start();
 
     Animated.timing(
       this.state.btnAnimY, {
-        duration: 100,
+        duration: 200,
         toValue: actionBtnBottom,
-        easing: Easing.in(Easing.quad),
+        easing: Easing.in(Easing.cubic),
       }
     ).start();
 
@@ -75,7 +75,7 @@ class App extends Component {
         <Animated.View style={{position: 'absolute', right: this.state.btnAnimX, bottom: this.state.btnAnimY, zIndex: 10, height: 60, width: 60}} pointerEvents={"box-none"}>
           <ActionButton/>
         </Animated.View>
-        <Animated.View style={{opacity: this.state.playerBgOpacity, backgroundColor: '#000000', position: 'absolute', left: 0, bottom: 0, zIndex: 5}} pointerEvents={"box-none"}>
+        <Animated.View style={{opacity: this.state.playerBgOpacity, backgroundColor: 'rgba(0, 0, 0, 0.8)', position: 'absolute', left: 0, bottom: 0, zIndex: 5}} pointerEvents={"box-none"}>
           <Player />
         </Animated.View>
       </View>

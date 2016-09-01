@@ -1,7 +1,7 @@
 'use strict';
 
 import {connect} from 'react-redux';
-import {showMusicPLayer} from '../actions/music';
+import {showMusicPlayer} from '../actions/music';
 import Player from '../components/musicPlayer/player';
 
 const mapStateToProps = (state) => {
@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     showMusicPlayer: (show) => {
-      dispatch(showMusicPLayer(show));
+      dispatch(showMusicPlayer(show));
     },
   };
 };
