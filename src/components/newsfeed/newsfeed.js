@@ -3,7 +3,6 @@
 import React from 'react';
 import ReactNative from 'react-native';
 import NewsfeedCard from './newsfeedCard';
-import AddMusicLayer from './addMusicLayer';
 import RefreshableListView from '../refreshableListView';
 import Styles from '../../styles';
 
@@ -28,11 +27,6 @@ var Newsfeed = ({newsfeedCardData, fetchNewsfeedData, addNewsfeedResult, addNewM
         onRefresh={fetchNewsfeedData}
         renderRow={createNewsfeedCards}
         data={newsfeedCardData}
-      />
-      <AddMusicLayer
-        pos={{bottom: 10, right: 10}}
-        addNewMusic={addNewMusic}
-        addNewsfeedResult={addNewsfeedResult}
       />
     </View>
   );
