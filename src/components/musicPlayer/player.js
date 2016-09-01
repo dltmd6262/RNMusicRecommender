@@ -4,10 +4,10 @@ import React, {Component} from 'react';
 import ReactNative from 'react-native';
 
 const {
+  BackAndroid,
   Easing,
   Animated,
   View,
-  Text,
   Image,
   Dimensions,
   TouchableOpacity,
@@ -56,7 +56,14 @@ export default class Player extends Component {
       }
     ).start();
 
-    console.log(5959, this.props);
+    if (this.props.isShowingPlayer) {
+      BackAndroid.addEventListener('hidePlayer', () => {
+        this.props.showMusicPlayer(false);
+        return true
+      });
+    } else {
+      BackAndroid.removeEventListener('hidePlayer');
+    }
 
     return (
       <View style={{width: fullWidth, height: fullHeight}} pointerEvents={enableTouch}>
