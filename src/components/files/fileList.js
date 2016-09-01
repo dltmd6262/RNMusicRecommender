@@ -41,10 +41,9 @@ export default class FileList extends Component {
     });
   }
 
-  startPlayingMusic(filePath) {
-    return NativeModules.MusicPlayer.playNewMusic(filePath).then(() => {
-      NativeModules.MusicPlayer.loopCurrentMusic();
-    });
+  startPlayingMusic(path, name) {
+    this.props.showMusicPlayer(true);
+    this.props.playNewMusic(path, name);
   }
 
   render() {

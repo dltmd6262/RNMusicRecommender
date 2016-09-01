@@ -33,30 +33,32 @@ class App extends Component {
     const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 
     const playerBgOpacity = this.props.isShowingPlayer ? 1 : 0;
-    const actionBtnRight = this.props.isShowingPlayer ? fullWidth / 2 - 30 : 50;
-    const actionBtnBottom = this.props.isShowingPlayer ? 100 : 50;
+    const actionBtnRight = this.props.isShowingPlayer ? fullWidth / 2 - 30 : 30;
+    const actionBtnBottom = this.props.isShowingPlayer ? 95 : 30;
 
     Animated.timing(
       this.state.playerBgOpacity, {
-        duration: 200,
+        duration: 300,
         toValue: playerBgOpacity,
-        easing: Easing.in(Easing.cubic),
+        easing: Easing.out(Easing.cubic),
       }
     ).start();
 
     Animated.timing(
       this.state.btnAnimX, {
-        duration: 200,
+        delay: 100,
+        duration: 300,
         toValue: actionBtnRight,
-        easing: Easing.in(Easing.cubic),
+        easing: Easing.out(Easing.cubic),
       }
     ).start();
 
     Animated.timing(
       this.state.btnAnimY, {
-        duration: 200,
+        delay: 100,
+        duration: 300,
         toValue: actionBtnBottom,
-        easing: Easing.in(Easing.cubic),
+        easing: Easing.out(Easing.cubic),
       }
     ).start();
 

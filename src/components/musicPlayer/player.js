@@ -8,6 +8,7 @@ const {
   Easing,
   Animated,
   View,
+  Text,
   Image,
   Dimensions,
   TouchableOpacity,
@@ -34,25 +35,25 @@ export default class Player extends Component {
     Animated.timing(
       this.state.topBgLeft, {
         delay: 100,
-        duration: 200,
+        duration: 300,
         toValue: topBgLeft,
-        easing: Easing.cubic,
+        easing: Easing.out(Easing.cubic),
       }
     ).start();
 
     Animated.timing(
       this.state.controlBgY, {
-        duration: 200,
+        duration: 300,
         toValue: controlBgY,
-        easing: Easing.cubic,
+        easing: Easing.out(Easing.cubic),
       }
     ).start();
 
     Animated.timing(
       this.state.controlBgYLower, {
-        duration: 200,
+        duration: 300,
         toValue: controlBgYLower,
-        easing: Easing.cubic,
+        easing: Easing.out(Easing.cubic),
       }
     ).start();
 
@@ -67,7 +68,8 @@ export default class Player extends Component {
 
     return (
       <View style={{width: fullWidth, height: fullHeight}} pointerEvents={enableTouch}>
-        <Image style={{alignSelf: 'center'}} source={require('../../asset/test.jpg')} />
+        <Image style={{alignSelf: 'center'}} source={require('../../asset/test.jpg')}/>
+        <Text style={{position: 'absolute', top: 70, left: 10, width: 250, color: '#ffffff', fontSize: 30}}>{this.props.currentMusic}</Text>
         <Animated.View style={{
           position: 'absolute',
           top: 0,
@@ -102,7 +104,10 @@ export default class Player extends Component {
           height: 150,
           left: 0,
           bottom: this.state.controlBgYLower,
-        }}/>
+        }}>
+          <Image style={{position: 'absolute', bottom: 100, left: 80, tintColor: '#ee9459'}} source={require('../../asset/back.png')}/>
+          <Image style={{position: 'absolute', bottom: 100, left: fullWidth - 80 - 48, tintColor: '#ee9459'}} source={require('../../asset/forward.png')}/>
+        </Animated.View>
       </View>
     )
   }
