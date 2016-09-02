@@ -57,6 +57,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
+                    mp.setLooping(true);
                 }
             });
 

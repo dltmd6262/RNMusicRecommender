@@ -69,7 +69,7 @@ export default class Player extends Component {
     return (
       <View style={{width: fullWidth, height: fullHeight}} pointerEvents={enableTouch}>
         <Image style={{alignSelf: 'center'}} source={require('../../asset/test.jpg')}/>
-        <Text style={{position: 'absolute', top: 70, left: 10, width: 250, color: '#ffffff', fontSize: 30}}>{this.props.currentMusic}</Text>
+        <Text style={{position: 'absolute', top: 70, left: 10, width: 250, color: '#ffffff', fontSize: 25}}>{this.props.currentMusic}</Text>
         <Animated.View style={{
           position: 'absolute',
           top: 0,
@@ -96,7 +96,9 @@ export default class Player extends Component {
           borderRightWidth: fullWidth,
           borderRightColor: '#faf2e8',
           borderStyle: 'solid'
-        }}/>
+        }}>
+          <Image style={{position: 'absolute', bottom: 15, left: fullWidth - 60, tintColor: '#ee9459', transform: [{scale: 0.7}]}} source={require('../../asset/repeat.png')}/>
+        </Animated.View>
         <Animated.View style={{
           backgroundColor: '#faf2e8',
           position: 'absolute',
