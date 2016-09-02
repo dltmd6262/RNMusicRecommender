@@ -11,6 +11,7 @@ const mapStateToProps = (state) => {
   return {
     isShowingPlayer: state.Music.isShowingPlayer,
     currentMusic: state.Music.currentMusic,
+    currentMusicDuration: state.Music.currentMusicDuration,
   };
 };
 

@@ -13,9 +13,10 @@ export const showMusicPlayer = (show) => {
 
 export const PLAY_NEW_MUSIC = 'PLAY_NEW_MUSIC';
 
-const dispatchPlayNewMusic = (name) => {
+const dispatchPlayNewMusic = (name, duration) => {
   return {
     type: PLAY_NEW_MUSIC,
+    currentMusicDuration: duration,
     currentMusic: name,
     isPlaying: true,
   };
@@ -24,8 +25,19 @@ const dispatchPlayNewMusic = (name) => {
 export const playNewMusic = (path, name) => {
   return dispatch => {
     return co(function *() {
-      NativeModules.MusicPlayer.playNewMusic(path);
-      dispatch(dispatchPlayNewMusic(name));
+      const result = yield NativeModules.MusicPlayer.playNewMusic(path);
+
+      const durationInSeconds = parseInt(parseInt(result.duration, 10) / 1000, 10);
+      const minutes = parseInt(durationInSeconds / 60, 10);
+      const seconds = parseInt(durationInSeconds % 60, 10);
+
+      const secondsString = seconds < 10 ? `0${seconds}` : seconds;
+
+      const durationString = `${minutes}:${secondsString}`;
+
+      console.log(result, durationInSeconds, minutes, seconds, durationString);
+
+      dispatch(dispatchPlayNewMusic(name, durationString));
     });
   }
 };

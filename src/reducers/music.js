@@ -23,6 +23,7 @@ const music = (state = {}, action) => {
         ...state,
         isPlaying: action.isPlaying,
         currentMusic: action.currentMusic,
+        currentMusicDuration: action.currentMusicDuration,
       };
     default:
       return state;

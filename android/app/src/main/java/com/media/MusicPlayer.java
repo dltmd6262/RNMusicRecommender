@@ -9,9 +9,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 
 import java.io.File;
 
@@ -20,7 +23,6 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     private final BroadcastReceiver changeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.w("com.media", "1234");
             if (intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 MusicPlayer.this.pauseCurrentMusic();
             }
@@ -42,7 +44,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     private MediaPlayer currentMusic = null;
 
     @ReactMethod
-    public void playNewMusic(String path) {
+    public void playNewMusic(String path, Promise promise) {
         Uri filePath = Uri.fromFile(new File(path));
         Log.w("com.media", filePath.toString());
         try {
@@ -51,8 +53,19 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             }
 
             this.currentMusic = MediaPlayer.create(this.getReactApplicationContext(), filePath);
-            this.currentMusic.start();
+            this.currentMusic.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+
+            WritableMap result = Arguments.createMap();
+            result.putString("duration", Integer.toString(this.currentMusic.getDuration()));
+
+            promise.resolve(result);
         } catch (Exception e) {
+            promise.reject(e);
             Log.e("com.media", e.toString());
         }
     }
@@ -85,5 +98,16 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         }
 
         this.currentMusic.setLooping(loop);
+    }
+
+    @ReactMethod
+    public void getMusicProgress(Promise promise) {
+        if (this.currentMusic == null) {
+            Log.i("com.media", "No music is playing to get progress from");
+            return;
+        }
+
+        WritableMap result = Arguments.createMap();
+        result.putString("currentPosition", Integer.toString(this.currentMusic.getCurrentPosition()));
     }
 }
