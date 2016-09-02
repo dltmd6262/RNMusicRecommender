@@ -1,6 +1,6 @@
 'use strict';
 
-import co from 'co';
+import runSafe from '../../common/runSafe';
 import { NativeModules, AsyncStorage } from 'react-native';
 
 export const UPDATE_FILE_STRUCTURE = 'UPDATE_FILE_STRUCTURE';
@@ -14,7 +14,7 @@ const dispatchFileStructure = (files) => {
 
 export const updateFileStructure = () => {
   return function (dispatch) {
-    return co(function *() {
+    return runSafe(function *() {
       const fileStructure = yield AsyncStorage.getItem("file_structure");
 
       if (fileStructure) {
@@ -22,13 +22,12 @@ export const updateFileStructure = () => {
         NativeModules.FileSystem.getFoldersWithMusic()
           .then(f => {
             f = f.filter(folder => folder.files.length > 0);
+            dispatch(dispatchFileStructure(f));
             AsyncStorage.setItem("file_structure", JSON.stringify(f));
           });
       } else {
-        const fileStructure = yield NativeModules.FileSystem.getFoldersWithMusic()
-          .then(f => {
-            return f.filter(folder => folder.files.length > 0)
-          });
+        let fileStructure = yield NativeModules.FileSystem.getFoldersWithMusic();
+        fileStructure = fileStructure.filter(f => f.files.length > 0);
 
         dispatch(dispatchFileStructure(fileStructure));
       }

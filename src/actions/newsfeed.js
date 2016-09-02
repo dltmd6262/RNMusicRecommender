@@ -1,6 +1,6 @@
 'use strict';
 
-import co from 'co';
+import runSafe from '../../common/runSafe';
 import NewsfeedSnapshot from '../snapshots/newsfeed';
 import Config from '../config';
 
@@ -26,7 +26,7 @@ export const updateAddResult = (result) => {
 // API call to get all newsfeed data
 export const fetchNewsfeedData = () => {
   return function (dispatch) {
-    return co(function *() {
+    return runSafe(function *() {
       let res = yield fetch(Config.address + '/newsfeed', {
         method: 'GET'
       });
@@ -42,7 +42,7 @@ export const fetchNewsfeedData = () => {
 // API call to add new music card
 export const addNewMusic = (data) => {
   return function (dispatch) {
-    return co(function *() {
+    return runSafe(function *() {
       let res = yield fetch(Config.address + '/newsfeed', {
         method: 'POST',
         body: JSON.stringify(data),

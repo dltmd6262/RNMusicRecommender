@@ -1,6 +1,6 @@
 'use strict';
 
-import co from 'co';
+import runSafe from '../../common/runSafe';
 import {NativeModules} from 'react-native';
 
 export const SHOW_MUSIC_PLAYER = 'SHOW_MUSIC_PLAYER';
@@ -24,7 +24,7 @@ const dispatchPlayNewMusic = (name, duration) => {
 
 export const playNewMusic = (path, name) => {
   return dispatch => {
-    return co(function *() {
+    return runSafe(function *() {
       const result = yield NativeModules.MusicPlayer.playNewMusic(path);
 
       const durationInSeconds = parseInt(parseInt(result.duration, 10) / 1000, 10);
@@ -32,10 +32,7 @@ export const playNewMusic = (path, name) => {
       const seconds = parseInt(durationInSeconds % 60, 10);
 
       const secondsString = seconds < 10 ? `0${seconds}` : seconds;
-
       const durationString = `${minutes}:${secondsString}`;
-
-      console.log(result, durationInSeconds, minutes, seconds, durationString);
 
       dispatch(dispatchPlayNewMusic(name, durationString));
     });
@@ -53,7 +50,7 @@ const dispatchPauseCurrentMusic = () => {
 
 export const pauseCurrentMusic = () => {
   return dispatch => {
-    return co(function *() {
+    return runSafe(function *() {
       NativeModules.MusicPlayer.pauseCurrentMusic();
       dispatch(dispatchPauseCurrentMusic());
     });
@@ -71,7 +68,7 @@ const dispatchPlayCurrentMusic = () => {
 
 export const playCurrentMusic = () => {
   return dispatch => {
-    return co(function *() {
+    return runSafe(function *() {
       NativeModules.MusicPlayer.playCurrentMusic();
       dispatch(dispatchPlayCurrentMusic());
     });

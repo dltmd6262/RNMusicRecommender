@@ -1,8 +1,8 @@
 'use strict';
 
-import co from 'co';
+import runSafe from '../../common/runSafe';
 import Config from '../config';
-import {httpGet, httpPost} from '../../common/api';
+import {httpPost} from '../../common/api';
 
 // Set user id of user in state
 export const SET_UID = 'SET_UID';
@@ -16,7 +16,7 @@ export const setUID = (userData) => {
 // Login user with the given email and password
 export const login = (email, password) => {
   return function (dispatch) {
-    return co(function *() {
+    return runSafe(function *() {
       let res = yield httpPost(Config.address + '/user/login', {
         body: JSON.stringify({id: email, password}),
       });
@@ -29,7 +29,7 @@ export const login = (email, password) => {
 // Create new user with the given email and password
 export const createUser = (email, password) => {
   return function (dispatch) {
-    return co(function *() {
+    return runSafe(function *() {
       let res = yield httpPost(Config.address + '/user/signup', {
         body: JSON.stringify({id: email, password}),
       });
