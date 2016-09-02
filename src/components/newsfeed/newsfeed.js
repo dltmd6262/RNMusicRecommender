@@ -4,10 +4,10 @@ import React from 'react';
 import ReactNative from 'react-native';
 import NewsfeedCard from './newsfeedCard';
 import RefreshableListView from '../refreshableListView';
-import Styles from '../../styles';
 
 var {
   View,
+  StyleSheet,
 } = ReactNative;
 
 var createNewsfeedCards = (d, i) => {
@@ -22,7 +22,7 @@ var createNewsfeedCards = (d, i) => {
 
 var Newsfeed = ({newsfeedCardData, fetchNewsfeedData, addNewsfeedResult, addNewMusic}) => {
   return (
-    <View style={Styles.container}>
+    <View style={s.container}>
       <RefreshableListView
         onRefresh={fetchNewsfeedData}
         renderRow={createNewsfeedCards}
@@ -31,5 +31,14 @@ var Newsfeed = ({newsfeedCardData, fetchNewsfeedData, addNewsfeedResult, addNewM
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#faf2e8',
+  },
+});
 
 export default Newsfeed

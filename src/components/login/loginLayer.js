@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
-import Styles from '../../styles';
 
 var {
   Text,
@@ -33,12 +32,12 @@ class LoginPage extends Component {
     let content;
     if (this.props.uid) {
       content =
-        <View style={Styles.container}>
+        <View style={s.container}>
           <Text>{`Logged in as ${this.props.uid}`}</Text>
         </View>
     } else {
       content =
-        <View style={Styles.container}>
+        <View style={s.container}>
           <Text>Please sign in</Text>
           <Text style={s.formTitle}>Email</Text>
             <TextInput
@@ -69,6 +68,12 @@ class LoginPage extends Component {
 }
 
 var s = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#faf2e8',
+  },
   form: {
     height: 40,
     borderColor: '#b06955',

@@ -12,6 +12,8 @@ var {
   BackAndroid,
 } = ReactNative;
 
+const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
+
 export default class FileList extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +31,7 @@ export default class FileList extends Component {
     });
   }
 
-  createSeparator() {
+  static createSeparator() {
     return (
       <View style={{height: 1, backgroundColor: '#f2c492'}}/>
     );
@@ -65,7 +67,7 @@ export default class FileList extends Component {
       <ListView
         dataSource={this.state.dataSource.cloneWithRows(data)}
         renderRow={view}
-        style={{width: Dimensions.get('window').width}}
+        style={{width: fullWidth}}
         renderSeparator={this.createSeparator}
       />
     )
