@@ -97,7 +97,8 @@ export default class Player extends Component {
           borderRightColor: '#faf2e8',
           borderStyle: 'solid'
         }}>
-          <Image style={{position: 'absolute', bottom: 15, left: fullWidth - 60, tintColor: '#ee9459', transform: [{scale: 0.7}]}} source={require('../../asset/repeat.png')}/>
+          <Image style={{position: 'absolute', bottom: 15, left: fullWidth - 60, tintColor: '#ee9459', transform: [{scale: 0.6}]}} source={require('../../asset/repeat.png')}/>
+          <Image style={{position: 'absolute', bottom: 15, left: fullWidth - 110, tintColor: '#ee9459', transform: [{scale: 0.6}]}} source={require('../../asset/shuffle.png')}/>
         </Animated.View>
         <Animated.View style={{
           backgroundColor: '#faf2e8',
@@ -109,8 +110,8 @@ export default class Player extends Component {
         }}>
           <Image style={{position: 'absolute', bottom: 100, left: 80, tintColor: '#ee9459'}} source={require('../../asset/back.png')}/>
           <Image style={{position: 'absolute', bottom: 100, left: fullWidth - 80 - 48, tintColor: '#ee9459'}} source={require('../../asset/forward.png')}/>
-          <View style={{position: 'absolute', height: 3, width: 220, bottom: 65, left: 70, backgroundColor: '#e9e6c9'}} />
-          <View style={{position: 'absolute', height: 3, width: 100, bottom: 65, left: 70, backgroundColor: '#ca6144'}} />
+          <View style={{position: 'absolute', height: 3, width: 230, bottom: 65, left: 70, backgroundColor: '#e9e6c9'}} />
+          <View style={{position: 'absolute', height: 3, width: 110, bottom: 65, left: 70, backgroundColor: '#ca6144'}} />
           <Text style={{position: 'absolute', bottom: 57, left: fullWidth - 50, color: '#ee9459', fontSize: 15}}>{this.props.currentMusicDuration}</Text>
           <Text style={{position: 'absolute', bottom: 57, left: 25, color: '#ee9459', fontSize: 15}}>{'0:00'}</Text>
         </Animated.View>

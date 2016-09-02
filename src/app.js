@@ -24,6 +24,7 @@ let initialState = {
     files: [],
   },
   Music: {
+    currentPosition: '0:00',
     isPlaying: false,
     currentMusic: '',
     isShowingPlayer: false,
