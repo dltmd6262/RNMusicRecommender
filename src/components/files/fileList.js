@@ -30,6 +30,7 @@ export default class FileList extends Component {
         this.setState({
           currentFolder: null,
         });
+        this.listView.scrollTo({y: 0});
       }
 
       this.wasShowingPlayer = false;
@@ -73,6 +74,7 @@ export default class FileList extends Component {
 
     return (
       <ListView
+        ref={ref => this.listView = ref}
         dataSource={this.state.dataSource.cloneWithRows(data)}
         renderRow={view}
         style={{width: fullWidth}}
