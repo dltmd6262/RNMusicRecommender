@@ -17,15 +17,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     showMusicPlayer: (show) => {
-      console.log(2020);
       dispatch(showMusicPlayer(show));
     },
     playCurrentMusic: () => {
-      console.log(2424);
       dispatch(playCurrentMusic());
     },
     pauseCurrentMusic: () => {
-      console.log(2828);
       dispatch(pauseCurrentMusic());
     },
   };

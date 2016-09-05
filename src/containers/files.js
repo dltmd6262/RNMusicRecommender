@@ -7,6 +7,7 @@ import {playNewMusic, showMusicPlayer} from '../actions/music';
 
 const mapStateToProps = (state) => {
   return {
+    isShowingPlayer: state.Music.isShowingPlayer,
     files: state.Files.files,
   };
 };

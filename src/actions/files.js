@@ -28,6 +28,7 @@ export const updateFileStructure = () => {
       } else {
         let fileStructure = yield NativeModules.FileSystem.getFoldersWithMusic();
         fileStructure = fileStructure.filter(f => f.files.length > 0);
+        AsyncStorage.setItem("file_structure", JSON.stringify(fileStructure));
 
         dispatch(dispatchFileStructure(fileStructure));
       }

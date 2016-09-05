@@ -17,17 +17,24 @@ const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 export default class FileList extends Component {
   constructor(props) {
     super(props);
+    this.wasShowingPlayer = false;
     this.state = {
       currentFolder: null,
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
+  }
 
-    BackAndroid.addEventListener('goBackToFolderList', () => {
-      this.setState({
-        currentFolder: null,
-      });
+  componentDidMount() {
+    BackAndroid.addEventListener('goToFolders', () => {
+      if (this.state.currentFolder && !this.wasShowingPlayer) {
+        this.setState({
+          currentFolder: null,
+        });
+      }
 
-      return true;
+      this.wasShowingPlayer = false;
+
+      return false;
     });
   }
 
@@ -49,6 +56,7 @@ export default class FileList extends Component {
   }
 
   render() {
+    if (this.props.isShowingPlayer) {this.wasShowingPlayer = true}
     const view = this.state.currentFolder ? FileRow : FolderRow;
     const onSelected = this.state.currentFolder ?
       this.startPlayingMusic.bind(this) : this.showMusicInFolder.bind(this);

@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {UIManager, Platform} from 'react-native';
+import {UIManager, Platform, BackAndroid} from 'react-native';
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import Reducer from './reducers/index';
@@ -44,6 +44,10 @@ const AppWithStore = () => {
     </Provider>
   )
 };
+
+BackAndroid.addEventListener('preventDefault', () => {
+  return true;
+});
 
 // Initial db call for newsfeed data
 store.dispatch(fetchNewsfeedData());

@@ -9,6 +9,7 @@ var {
   Text,
   TouchableOpacity,
   StyleSheet,
+  BackAndroid,
 } = ReactNative;
 
 const fileIcon = require('../../asset/file.png');
@@ -38,6 +39,12 @@ export const FolderRow = ({name, onSelected}) => {
 };
 
 const s = StyleSheet.create({
+  file: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 70,
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'center',

@@ -31,14 +31,15 @@ export default class Player extends Component {
       controlBgY: new Animated.Value(150),
       controlBgYLower: new Animated.Value(0),
     };
+  }
 
+  componentDidMount() {
     BackAndroid.addEventListener('hidePlayer', () => {
-      if (props.isShowingPlayer) {
-        props.showMusicPlayer(false);
+      if (this.props.isShowingPlayer) {
+        this.props.showMusicPlayer(false);
       }
-      return true;
+      return false;
     });
-
   }
 
   startAnimation(topBgLeft, controlBgY, controlBgYLower) {
