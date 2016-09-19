@@ -21,19 +21,24 @@ var NativeModuleMockup = {
      * @return {Promise<>}
      */
     playNewMusic: function (path) {},
+
     /**
      * @return {Promise<>}
      */
     playCurrentMusic: function () {},
+
     /**
      * @return {Promise<>}
      */
     pauseCurrentMusic: function () {},
+
     /**
      * @param {bool} loop - whether to loop the current music
      * @return {Promise<>}
      */
     loopCurrentMusic: function (loop) {},
+
+    playFromBeginning: function () {},
   },
   FileSystem: {
     /**

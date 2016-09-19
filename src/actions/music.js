@@ -39,6 +39,21 @@ export const playNewMusic = (path, name) => {
   }
 };
 
+export const PLAY_FROM_BEGINNING = 'PLAY_FROM_BEGINNING';
+
+const dispatchPlayFromBeginning = () => {
+  return {
+    type: PLAY_FROM_BEGINNING,
+  };
+};
+
+export const playFromBeginning = () => {
+  return dispatch => {
+    NativeModules.MusicPlayer.playFromBeginning();
+    dispatch(dispatchPlayFromBeginning());
+  }
+};
+
 export const PAUSE_CURRENT_MUSIC = 'PAUSE_CURRENT_MUSIC';
 
 const dispatchPauseCurrentMusic = () => {

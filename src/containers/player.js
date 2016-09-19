@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Player from '../components/musicPlayer/player';
 import {
   showMusicPlayer,
+  playFromBeginning,
 } from '../actions/music';
 
 
@@ -19,6 +20,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showMusicPlayer: (show) => {
       dispatch(showMusicPlayer(show));
+    },
+    playFromBeginning: () => {
+      dispatch(playFromBeginning());
     },
   };
 };

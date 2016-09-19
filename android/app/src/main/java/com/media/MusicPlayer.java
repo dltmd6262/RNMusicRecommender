@@ -82,6 +82,16 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void playFromBeginning() {
+        if (this.currentMusic == null) {
+            Log.i("com.media", "No current music is set to start from beginning");
+            return;
+        }
+        
+        this.currentMusic.seekTo(0);
+    }
+
+    @ReactMethod
     public void pauseCurrentMusic() {
         if (this.currentMusic == null || !this.currentMusic.isPlaying()) {
             Log.i("com.media", "No current music is set or is not playing.");
@@ -110,5 +120,16 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
 
         WritableMap result = Arguments.createMap();
         result.putString("currentPosition", Integer.toString(this.currentMusic.getCurrentPosition()));
+        promise.resolve(result);
+    }
+
+    @ReactMethod
+    public void jumpTo(Integer time) {
+        if (this.currentMusic == null) {
+            Log.i("com.media", "No music is playing to jump to");
+            return;
+        }
+
+        this.currentMusic.seekTo(time);
     }
 }

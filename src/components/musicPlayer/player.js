@@ -91,12 +91,14 @@ export default class Player extends Component {
           <Image style={s.shuffle} source={shuffleIcon}/>
         </Animated.View>
         <Animated.View style={[s.lowerRectangle, {bottom: this.state.controlBgYLower}]}>
-          <Image style={s.backButton} source={backIcon}/>
+          <TouchableOpacity style={s.backButton} onPress={this.props.playFromBeginning}>
+            <Image style={{tintColor: '#ee9459'}} source={backIcon}/>
+          </TouchableOpacity>
           <Image style={s.forwardButton} source={forwardIcon}/>
           <View style={s.progressBg} />
           <View style={s.progressFill} />
           <Text style={s.timeLeft}>{this.props.currentMusicDuration}</Text>
-          <Text style={s.timeLeft}>{'0:00'}</Text>
+          <Text style={s.timePassed}>{'0:00'}</Text>
         </Animated.View>
       </View>
     )
@@ -167,7 +169,6 @@ const s = StyleSheet.create({
     position: 'absolute',
     bottom: 100,
     left: 80,
-    tintColor: '#ee9459',
   },
   forwardButton: {
     position: 'absolute',
