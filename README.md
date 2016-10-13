@@ -1,4 +1,4 @@
-## React Native with Redux and Go server
+## React Native with Redux and Rust server
 
 [![Build Status](https://travis-ci.org/dltmd6262/RealPitch.svg?branch=master)](https://travis-ci.org/dltmd6262/RealPitch)
 
