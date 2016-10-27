@@ -36,9 +36,9 @@ export const rewind = (prev, currentMusic) => {
   return (dispatch, getState) => {
     if (prev) {
       const state = getState();
-      const playlist = state.Files.playlist, isRandom = state.Music.isRandom;
+      const playlist = state.Files.playlist, isShuffle = state.Music.shuffle;
       const currentIndex = _.findIndex(playlist, m => m.fileName === currentMusic);
-      const previousMusic = isRandom ? _.sample(playlist) :
+      const previousMusic = isShuffle ? _.sample(playlist) :
         playlist[currentIndex === 0 ? playlist.length - 1 : currentIndex - 1];
       playNewMusic(previousMusic.path, previousMusic.fileName)(dispatch);
     } else {
@@ -50,9 +50,9 @@ export const rewind = (prev, currentMusic) => {
 export const fastForward = (currentMusic) => {
   return (dispatch, getState) => {
     const state = getState();
-    const playlist = state.Files.playlist, isRandom = state.Music.isRandom;
+    const playlist = state.Files.playlist, isShuffle = state.Music.shuffle;
     const currentIndex = _.findIndex(playlist, m => m.fileName === currentMusic);
-    const nextMusic = isRandom ? _.sample(playlist) :
+    const nextMusic = isShuffle ? _.sample(playlist) :
       playlist[currentIndex === (playlist.length - 1) ? 0 : currentIndex + 1];
     playNewMusic(nextMusic.path, nextMusic.fileName)(dispatch);
   }
@@ -92,4 +92,22 @@ export const playCurrentMusic = () => {
       dispatch(dispatchPlayCurrentMusic());
     });
   }
+};
+
+export const CHANGE_SHUFFLE = 'CHANGE_SHUFFLE';
+
+export const changeShuffle = (shouldShuffle) => {
+  return {
+    type: CHANGE_SHUFFLE,
+    shuffle: shouldShuffle,
+  };
+};
+
+export const CHANGE_REPEAT = 'CHANGE_REPEAT';
+
+export const changeRepeat = (mode) => {
+  return {
+    type: CHANGE_REPEAT,
+    repeat: mode,
+  };
 };

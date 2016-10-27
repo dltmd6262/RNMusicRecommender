@@ -69,6 +69,15 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
                 }
             });
 
+            this.currentMusic.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    WritableMap result = Arguments.createMap();
+                    rctContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("MusicCompleted", result);
+                }
+            });
+
             WritableMap result = Arguments.createMap();
             result.putInt("duration", this.currentMusic.getDuration());
 
@@ -120,5 +129,9 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         }
 
         this.currentMusic.seekTo(time);
+
+        if (!this.currentMusic.isPlaying()) {
+            this.currentMusic.start();
+        }
     }
 }

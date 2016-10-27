@@ -1,8 +1,10 @@
 'use strict';
 
+import _ from 'lodash';
 import React, {Component} from 'react';
-import {milliToTimeString} from '../../util';
+import {milliToTimeString, getNextRepeatMode} from '../../util';
 import ReactNative, {DeviceEventEmitter} from 'react-native';
+import c from '../../constants';
 
 const {
   BackAndroid,
@@ -19,7 +21,8 @@ const {
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 const closeIcon = require('../../asset/close.png');
 const bgImg = require('../../asset/test.jpg');
-const repeatIcon = require('../../asset/repeat.png');
+const repeatOneIcon = require('../../asset/repeat_one.png');
+const repeatAllIcon = require('../../asset/repeat_all.png');
 const shuffleIcon = require('../../asset/shuffle.png');
 const backIcon = require('../../asset/back.png');
 const forwardIcon = require('../../asset/forward.png');
@@ -49,7 +52,12 @@ export default class Player extends Component {
         currentProgress: progress.currentPosition,
         progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * 230,
       });
-    })
+    });
+
+    DeviceEventEmitter.addListener('MusicCompleted', () => {
+      this.props.repeat === c.RepeatModes.One ?
+        this.props.rewind(false, this.props.currentMusic) : this.fastForward();
+    });
   }
 
   startAnimation(topBgLeft, controlBgY, controlBgYLower) {
@@ -88,6 +96,14 @@ export default class Player extends Component {
     this.props.fastForward(this.props.currentMusic);
   }
 
+  changeShuffle() {
+    this.props.changeShuffle(!this.props.shuffle);
+  }
+
+  changeRepeat() {
+    this.props.changeRepeat(getNextRepeatMode(this.props.repeat));
+  }
+
   render() {
     const enableTouch = this.props.isShowingPlayer ? 'auto' : 'none';
     const topBgLeft = this.props.isShowingPlayer ? 0 : fullWidth;
@@ -95,6 +111,10 @@ export default class Player extends Component {
     const controlBgYLower = this.props.isShowingPlayer ? 0 : -200;
 
     this.startAnimation(topBgLeft, controlBgY, controlBgYLower);
+
+    const shuffleOpacity = this.props.shuffle ? 1 : 0.7;
+    const repeatOpacity = this.props.repeat === c.RepeatModes.None ? 0.7 : 1;
+    const repeatImage = this.props.repeat === c.RepeatModes.One ? repeatOneIcon : repeatAllIcon;
 
     return (
       <View style={{width: fullWidth, height: fullHeight}} pointerEvents={enableTouch}>
@@ -106,8 +126,12 @@ export default class Player extends Component {
           </TouchableOpacity>
         </Animated.View>
         <Animated.View style={[s.lowerTriangle, {bottom: this.state.controlBgY}]}>
-          <Image style={s.repeat} source={repeatIcon}/>
-          <Image style={s.shuffle} source={shuffleIcon}/>
+          <TouchableOpacity activeOpacity={1} style={{width: 50, height: 50}} onPress={this.changeRepeat.bind(this)}>
+            <Image style={{opacity: repeatOpacity, tintColor: '#ee9459', transform: [{scale: 0.6}]}} source={repeatImage}/>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={1} style={{width: 50, height: 50}} onPress={this.changeShuffle.bind(this)}>
+            <Image style={{opacity: shuffleOpacity, tintColor: '#ee9459', transform: [{scale: 0.6}]}} source={shuffleIcon}/>
+          </TouchableOpacity>
         </Animated.View>
         <Animated.View style={[s.lowerRectangle, {bottom: this.state.controlBgYLower}]}>
           <TouchableOpacity style={s.backButton} onPress={this.rewind.bind(this)}>
@@ -176,15 +200,13 @@ const s = StyleSheet.create({
     position: 'absolute',
     bottom: 15,
     left: fullWidth - 60,
-    tintColor: '#ee9459',
-    transform: [{scale: 0.6}],
+    backgroundColor: '#000000',
   },
   shuffle: {
     position: 'absolute',
     bottom: 15,
     left: fullWidth - 110,
-    tintColor: '#ee9459',
-    transform: [{scale: 0.6}],
+    backgroundColor: '#000000',
   },
   backButton: {
     position: 'absolute',

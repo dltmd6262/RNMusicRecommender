@@ -6,6 +6,7 @@ import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import Reducer from './reducers/index';
 import thunk from 'redux-thunk';
+import c from './constants';
 
 import {fetchNewsfeedData} from './actions/newsfeed';
 import {updateFileStructure} from './actions/files';
@@ -22,12 +23,15 @@ let initialState = {
   },
   Files: {
     files: [],
+    playlist: [],
   },
   Music: {
     currentPosition: '0:00',
     isPlaying: false,
     currentMusic: '',
     isShowingPlayer: false,
+    shuffle: false,
+    repeat: c.RepeatModes.None,
   },
 };
 

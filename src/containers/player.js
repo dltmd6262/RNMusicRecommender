@@ -7,6 +7,8 @@ import {
   showMusicPlayer,
   rewind,
   fastForward,
+  changeRepeat,
+  changeShuffle,
 } from '../actions/music';
 
 
@@ -15,6 +17,8 @@ const mapStateToProps = (state) => {
     isShowingPlayer: state.Music.isShowingPlayer,
     currentMusic: state.Music.currentMusic,
     currentMusicDuration: state.Music.currentMusicDuration,
+    shuffle: state.Music.shuffle,
+    repeat: state.Music.repeat,
   };
 };
 
@@ -31,6 +35,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     fastForward: (currentMusic) => {
       dispatch(fastForward(currentMusic));
+    },
+    changeRepeat: (mode) => {
+      dispatch(changeRepeat(mode));
+    },
+    changeShuffle: (shouldShuffle) => {
+      dispatch(changeShuffle(shouldShuffle));
     },
   };
 };
