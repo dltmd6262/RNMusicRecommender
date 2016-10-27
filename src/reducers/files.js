@@ -1,4 +1,7 @@
-import {UPDATE_FILE_STRUCTURE} from '../actions/files';
+import {
+  UPDATE_FILE_STRUCTURE,
+  UPDATE_CURRENT_PLAYLIST,
+} from '../actions/files';
 
 const files = (state = {}, action) => {
   switch (action.type) {
@@ -6,6 +9,11 @@ const files = (state = {}, action) => {
       return {
         ...state,
         files: action.files,
+      };
+    case UPDATE_CURRENT_PLAYLIST:
+      return {
+        ...state,
+        playlist: action.list,
       };
     default:
       return state;

@@ -46,6 +46,7 @@ export default class FileList extends Component {
   }
 
   showMusicInFolder(folderName) {
+    this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === folderName).files);
     this.setState({
       currentFolder: folderName,
     });

@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import runSafe from '../../common/runSafe';
 import {NativeModules} from 'react-native';
 
@@ -26,31 +27,34 @@ export const playNewMusic = (path, name) => {
   return dispatch => {
     return runSafe(function *() {
       const result = yield NativeModules.MusicPlayer.playNewMusic(path);
-
-      const durationInSeconds = parseInt(parseInt(result.duration, 10) / 1000, 10);
-      const minutes = parseInt(durationInSeconds / 60, 10);
-      const seconds = parseInt(durationInSeconds % 60, 10);
-
-      const secondsString = seconds < 10 ? `0${seconds}` : seconds;
-      const durationString = `${minutes}:${secondsString}`;
-
-      dispatch(dispatchPlayNewMusic(name, durationString));
+      dispatch(dispatchPlayNewMusic(name, result.duration));
     });
   }
 };
 
-export const PLAY_FROM_BEGINNING = 'PLAY_FROM_BEGINNING';
-
-const dispatchPlayFromBeginning = () => {
-  return {
-    type: PLAY_FROM_BEGINNING,
+export const rewind = (prev, currentMusic) => {
+  return (dispatch, getState) => {
+    if (prev) {
+      const state = getState();
+      const playlist = state.Files.playlist, isRandom = state.Music.isRandom;
+      const currentIndex = _.findIndex(playlist, m => m.fileName === currentMusic);
+      const previousMusic = isRandom ? _.sample(playlist) :
+        playlist[currentIndex === 0 ? playlist.length - 1 : currentIndex - 1];
+      playNewMusic(previousMusic.path, previousMusic.fileName)(dispatch);
+    } else {
+      NativeModules.MusicPlayer.jumpTo(0);
+    }
   };
 };
 
-export const playFromBeginning = () => {
-  return dispatch => {
-    NativeModules.MusicPlayer.playFromBeginning();
-    dispatch(dispatchPlayFromBeginning());
+export const fastForward = (currentMusic) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const playlist = state.Files.playlist, isRandom = state.Music.isRandom;
+    const currentIndex = _.findIndex(playlist, m => m.fileName === currentMusic);
+    const nextMusic = isRandom ? _.sample(playlist) :
+      playlist[currentIndex === (playlist.length - 1) ? 0 : currentIndex + 1];
+    playNewMusic(nextMusic.path, nextMusic.fileName)(dispatch);
   }
 };
 
@@ -89,4 +93,3 @@ export const playCurrentMusic = () => {
     });
   }
 };
-

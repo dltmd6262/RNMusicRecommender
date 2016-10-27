@@ -3,8 +3,10 @@
 import {connect} from 'react-redux';
 import Player from '../components/musicPlayer/player';
 import {
+  playNewMusic,
   showMusicPlayer,
-  playFromBeginning,
+  rewind,
+  fastForward,
 } from '../actions/music';
 
 
@@ -18,11 +20,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    playNewMusic: (path, name) => {
+      dispatch(playNewMusic(path, name));
+    },
     showMusicPlayer: (show) => {
       dispatch(showMusicPlayer(show));
     },
-    playFromBeginning: () => {
-      dispatch(playFromBeginning());
+    rewind: (prev, currentMusic) => {
+      dispatch(rewind(prev, currentMusic));
+    },
+    fastForward: (currentMusic) => {
+      dispatch(fastForward(currentMusic));
     },
   };
 };

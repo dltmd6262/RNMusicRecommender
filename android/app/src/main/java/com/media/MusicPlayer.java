@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -15,10 +17,15 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.io.File;
 
 public class MusicPlayer extends ReactContextBaseJavaModule {
+
+    private ReactApplicationContext rctContext;
+    private MediaPlayer currentMusic = null;
+    private Handler mProgressHandle = new Handler(Looper.getMainLooper());
 
     private final BroadcastReceiver changeReceiver = new BroadcastReceiver() {
         @Override
@@ -32,6 +39,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     public MusicPlayer (ReactApplicationContext reactContext) {
         super(reactContext);
 
+        rctContext = reactContext;
         IntentFilter filter = new IntentFilter();
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         reactContext.registerReceiver(this.changeReceiver, filter);
@@ -41,13 +49,13 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         return "MusicPlayer";
     }
 
-    private MediaPlayer currentMusic = null;
-
     @ReactMethod
     public void playNewMusic(String path, Promise promise) {
         Uri filePath = Uri.fromFile(new File(path));
         Log.w("com.media", filePath.toString());
         try {
+            mProgressHandle.removeCallbacks(updateMusicProgress);
+
             if (this.currentMusic != null) {
                 this.currentMusic.release();
             }
@@ -57,12 +65,12 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
-                    mp.setLooping(true);
+                    mProgressHandle.postDelayed(updateMusicProgress, 100);
                 }
             });
 
             WritableMap result = Arguments.createMap();
-            result.putString("duration", Integer.toString(this.currentMusic.getDuration()));
+            result.putInt("duration", this.currentMusic.getDuration());
 
             promise.resolve(result);
         } catch (Exception e) {
@@ -82,16 +90,6 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void playFromBeginning() {
-        if (this.currentMusic == null) {
-            Log.i("com.media", "No current music is set to start from beginning");
-            return;
-        }
-        
-        this.currentMusic.seekTo(0);
-    }
-
-    @ReactMethod
     public void pauseCurrentMusic() {
         if (this.currentMusic == null || !this.currentMusic.isPlaying()) {
             Log.i("com.media", "No current music is set or is not playing.");
@@ -101,27 +99,18 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         this.currentMusic.pause();
     }
 
-    @ReactMethod
-    public void loopCurrentMusic(Boolean loop) {
-        if (this.currentMusic == null) {
-            Log.i("com.media", "No music is playing to loop");
-            return;
+    private Runnable updateMusicProgress = new Runnable() {
+        public void run() {
+            if (currentMusic != null && currentMusic.isPlaying()) {
+                WritableMap result = Arguments.createMap();
+                result.putInt("currentPosition", currentMusic.getCurrentPosition());
+                rctContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("MusicProgress", result);
+            }
+
+            mProgressHandle.postDelayed(this, 100);
         }
-
-        this.currentMusic.setLooping(loop);
-    }
-
-    @ReactMethod
-    public void getMusicProgress(Promise promise) {
-        if (this.currentMusic == null) {
-            Log.i("com.media", "No music is playing to get progress from");
-            return;
-        }
-
-        WritableMap result = Arguments.createMap();
-        result.putString("currentPosition", Integer.toString(this.currentMusic.getCurrentPosition()));
-        promise.resolve(result);
-    }
+    };
 
     @ReactMethod
     public void jumpTo(Integer time) {

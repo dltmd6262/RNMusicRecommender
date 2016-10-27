@@ -33,12 +33,9 @@ var NativeModuleMockup = {
     pauseCurrentMusic: function () {},
 
     /**
-     * @param {bool} loop - whether to loop the current music
-     * @return {Promise<>}
+     * @param loc Music location to jump to
      */
-    loopCurrentMusic: function (loop) {},
-
-    playFromBeginning: function () {},
+    jumpTo: function (loc) {},
   },
   FileSystem: {
     /**

@@ -35,3 +35,12 @@ export const updateFileStructure = () => {
     });
   };
 };
+
+export const UPDATE_CURRENT_PLAYLIST = 'UPDATE_CURRENT_PLAYLIST';
+
+export const updateCurrentPlaylist = (list) => {
+  return {
+    type: UPDATE_CURRENT_PLAYLIST,
+    list,
+  };
+};

@@ -1,7 +1,8 @@
 'use strict';
 
 import React, {Component} from 'react';
-import ReactNative from 'react-native';
+import {milliToTimeString} from '../../util';
+import ReactNative, {DeviceEventEmitter} from 'react-native';
 
 const {
   BackAndroid,
@@ -27,6 +28,8 @@ export default class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      progressBarWidth: 0,
+      currentProgress: milliToTimeString(0),
       topBgLeft: new Animated.Value(Dimensions.get('window').width),
       controlBgY: new Animated.Value(150),
       controlBgYLower: new Animated.Value(0),
@@ -40,6 +43,13 @@ export default class Player extends Component {
       }
       return false;
     });
+
+    DeviceEventEmitter.addListener('MusicProgress', (progress) => {
+      this.setState({
+        currentProgress: progress.currentPosition,
+        progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * 230,
+      });
+    })
   }
 
   startAnimation(topBgLeft, controlBgY, controlBgYLower) {
@@ -69,6 +79,15 @@ export default class Player extends Component {
     ).start();
   }
 
+  rewind() {
+    const shouldPlayPrevious = this.state.currentProgress < 2000;
+    this.props.rewind(shouldPlayPrevious, this.props.currentMusic);
+  }
+
+  fastForward() {
+    this.props.fastForward(this.props.currentMusic);
+  }
+
   render() {
     const enableTouch = this.props.isShowingPlayer ? 'auto' : 'none';
     const topBgLeft = this.props.isShowingPlayer ? 0 : fullWidth;
@@ -91,14 +110,16 @@ export default class Player extends Component {
           <Image style={s.shuffle} source={shuffleIcon}/>
         </Animated.View>
         <Animated.View style={[s.lowerRectangle, {bottom: this.state.controlBgYLower}]}>
-          <TouchableOpacity style={s.backButton} onPress={this.props.playFromBeginning}>
+          <TouchableOpacity style={s.backButton} onPress={this.rewind.bind(this)}>
             <Image style={{tintColor: '#ee9459'}} source={backIcon}/>
           </TouchableOpacity>
-          <Image style={s.forwardButton} source={forwardIcon}/>
+          <TouchableOpacity style={s.forwardButton} onPress={this.fastForward.bind(this)}>
+            <Image style={{tintColor: '#ee9459'}} source={forwardIcon}/>
+          </TouchableOpacity>
           <View style={s.progressBg} />
-          <View style={s.progressFill} />
-          <Text style={s.timeLeft}>{this.props.currentMusicDuration}</Text>
-          <Text style={s.timePassed}>{'0:00'}</Text>
+          <View style={[s.progressFill, {width: this.state.progressBarWidth}]} />
+          <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text>
+          <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text>
         </Animated.View>
       </View>
     )
@@ -174,7 +195,6 @@ const s = StyleSheet.create({
     position: 'absolute',
     bottom: 100,
     left: fullWidth - 80 - 48,
-    tintColor: '#ee9459',
   },
   progressBg: {
     position: 'absolute',

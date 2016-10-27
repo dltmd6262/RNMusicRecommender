@@ -3,11 +3,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import FileList from '../components/files/fileList';
+import {updateCurrentPlaylist} from '../actions/files';
 import {playNewMusic, showMusicPlayer} from '../actions/music';
 
 const mapStateToProps = (state) => {
   return {
     isShowingPlayer: state.Music.isShowingPlayer,
+    playlist: state.Files.playlist,
     files: state.Files.files,
   };
 };
@@ -19,6 +21,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showMusicPlayer: (show) => {
       dispatch(showMusicPlayer(show));
+    },
+    updateCurrentPlaylist: (list) => {
+      dispatch(updateCurrentPlaylist(list));
     },
   };
 };
