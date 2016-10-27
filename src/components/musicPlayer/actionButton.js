@@ -30,12 +30,12 @@ const s = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: `#ee9459`,
+    backgroundColor: `#ffffff`,
   },
   icon: {
     alignSelf: 'center',
     marginTop: 5,
-    tintColor: '#fbeacf',
+    tintColor: '#606060',
   },
 });
 
