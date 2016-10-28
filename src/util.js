@@ -1,6 +1,7 @@
 import c from './constants';
 
 export const milliToTimeString = (time) => {
+  time = time || 0;
   const durationInSeconds = parseInt(parseInt(time, 10) / 1000, 10);
   const minutes = parseInt(durationInSeconds / 60, 10);
   const seconds = parseInt(durationInSeconds % 60, 10);

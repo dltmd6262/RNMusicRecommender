@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -80,6 +82,13 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
 
             WritableMap result = Arguments.createMap();
             result.putInt("duration", this.currentMusic.getDuration());
+
+            Cursor cur = rctContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, "_data = '" + filePath.getPath() + "'", null, null);
+            if (cur != null) {
+                cur.moveToFirst();
+                result.putString("title", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                result.putString("artist", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST)));
+            }
 
             promise.resolve(result);
         } catch (Exception e) {

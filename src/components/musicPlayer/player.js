@@ -3,6 +3,7 @@
 import React, {Component} from 'react';
 import {milliToTimeString, getNextRepeatMode} from '../../util';
 import ReactNative, {DeviceEventEmitter} from 'react-native';
+import Svg from 'react-native-svg-uri';
 import c from '../../constants';
 
 const {
@@ -16,13 +17,9 @@ const {
 } = ReactNative;
 
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
-const closeIcon = require('../../asset/close.png');
 const bgImg = require('../../asset/test.jpg');
-const repeatOneIcon = require('../../asset/repeat_one.png');
-const repeatAllIcon = require('../../asset/repeat_all.png');
-const shuffleIcon = require('../../asset/shuffle.png');
-const backIcon = require('../../asset/back.png');
-const forwardIcon = require('../../asset/forward.png');
+const repeatOneIcon = require('../../asset/repeat_one.svg');
+const repeatAllIcon = require('../../asset/repeat_all.svg');
 
 export default class Player extends Component {
   constructor(props) {
@@ -83,22 +80,17 @@ export default class Player extends Component {
 
         <Text style={s.title}>{this.props.currentMusic}</Text>
 
-        <Image style={{
-          width: fullWidth * 0.75,
-          height: fullWidth * 0.75,
-          borderRadius: fullWidth * 0.75 / 2,
-          alignSelf: 'center',
-        }} source={bgImg}></Image>
+        <Image style={s.cover} source={bgImg}></Image>
 
-        <TouchableOpacity activeOpacity={1} style={{width: 50, height: 50}} onPress={this.changeRepeat.bind(this)}>
-          <Image style={{opacity: repeatOpacity, tintColor: '#606060', transform: [{scale: 0.6}]}} source={repeatImage}/>
+        <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
+          <Svg style={{opacity: repeatOpacity}} width="17" height="17" source={repeatImage} />
         </TouchableOpacity>
 
         <TouchableOpacity style={s.backButton} onPress={this.rewind.bind(this)}>
-          <Image style={{tintColor: '#606060', transform: [{scale: 0.8}]}} source={backIcon}/>
+          <Svg width="37" height="37" source={require('../../asset/back.svg')} />
         </TouchableOpacity>
         <TouchableOpacity style={s.forwardButton} onPress={this.fastForward.bind(this)}>
-          <Image style={{tintColor: '#606060', transform: [{scale: 0.8}]}} source={forwardIcon}/>
+          <Svg width="37" height="37" source={require('../../asset/forward.svg')} />
         </TouchableOpacity>
         <View style={s.progressBg} />
         <View style={[s.progressFill, {width: this.state.progressBarWidth}]} />
@@ -110,13 +102,20 @@ export default class Player extends Component {
 }
 
 const s = StyleSheet.create({
+  cover: {
+    marginTop: fullHeight * 0.12,
+    width: fullWidth * 0.75,
+    height: fullWidth * 0.75,
+    borderRadius: fullWidth * 0.75 / 2,
+    alignSelf: 'center',
+  },
   title: {
     position: 'absolute',
-    left: 80,
-    top: 1100,
+    left: fullWidth * 0.075,
+    top: fullHeight * 0.61,
     width: 250,
     color: '#606060',
-    fontSize: 25
+    fontSize: 16
   },
   closeButton: {
     left: fullWidth - 50,
@@ -126,9 +125,8 @@ const s = StyleSheet.create({
   },
   repeat: {
     position: 'absolute',
-    bottom: 15,
-    left: fullWidth - 60,
-    backgroundColor: '#000000',
+    bottom: fullHeight * 0.12,
+    left: fullWidth * 0.07,
   },
   shuffle: {
     position: 'absolute',
@@ -138,41 +136,41 @@ const s = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    bottom: 100,
+    bottom: fullHeight * 0.11,
     left: 80,
   },
   forwardButton: {
     position: 'absolute',
-    bottom: 100,
-    left: fullWidth - 80 - 48,
+    bottom: fullHeight * 0.11,
+    right: 80,
   },
   progressBg: {
     position: 'absolute',
-    height: 2,
+    height: 1,
     width: fullWidth * 0.85,
-    top: fullHeight * 0.78,
+    top: fullHeight * 0.75,
     left: fullWidth * (1 - 0.85) / 2,
-    backgroundColor: '#a2a2a2',
+    backgroundColor: '#d9d9d9',
   },
   progressFill: {
     position: 'absolute',
-    height: 2,
-    top: fullHeight * 0.78,
+    height: 1,
+    top: fullHeight * 0.75,
     left: fullWidth * (1 - 0.85) / 2,
     backgroundColor: '#606060',
   },
   timeLeft: {
     position: 'absolute',
-    bottom: 57,
-    left: fullWidth - 50,
+    top: fullHeight * 0.765,
+    right: 30,
     color: '#606060',
-    fontSize: 15,
+    fontSize: 11,
   },
   timePassed: {
     position: 'absolute',
-    bottom: 57,
-    left: 25,
+    top: fullHeight * 0.765,
+    left: 30,
     color: '#606060',
-    fontSize: 15,
+    fontSize: 11,
   },
 });
