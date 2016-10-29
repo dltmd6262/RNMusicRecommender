@@ -93,10 +93,12 @@ export default class Player extends Component {
         <Text style={s.title}>{this.props.currentMusicTitle}</Text>
         <Text style={s.artist}>{this.props.currentMusicArtist}</Text>
 
-        {
-          this.props.currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + this.props.currentMusicAlbum}} />
-            : <Image style={s.cover} source={bgImg}></Image>
-        }
+        <View style={[s.cover, {marginTop: fullHeight * 0.12, backgroundColor: 'transparent'}]} elevation={50}>
+          {
+            this.props.currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + this.props.currentMusicAlbum}} />
+              : <Image style={s.cover} source={bgImg}></Image>
+          }
+        </View>
 
         <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
           <Svg style={{opacity: repeatOpacity}} width="17" height="17" source={repeatImage} />
@@ -129,7 +131,6 @@ export default class Player extends Component {
 
 const s = StyleSheet.create({
   cover: {
-    marginTop: fullHeight * 0.12,
     width: fullWidth * 0.75,
     height: fullWidth * 0.75,
     borderRadius: fullWidth * 0.75 / 2,
