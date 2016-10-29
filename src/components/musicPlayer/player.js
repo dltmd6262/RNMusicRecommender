@@ -68,6 +68,18 @@ export default class Player extends Component {
     this.props.changeRepeat(getNextRepeatMode(this.props.repeat));
   }
 
+  onProgressChange(e) {
+    this.setState({
+      progressBarWidth: e.nativeEvent.locationX,
+    });
+  }
+
+  onProgressChangeEnd(e) {
+    if (this.props.currentMusicDuration) {
+      this.props.jumpTo(parseInt(e.nativeEvent.locationX / (fullWidth * 0.85) * this.props.currentMusicDuration, 10));
+    }
+  }
+
   render() {
     const enableTouch = this.props.isShowingPlayer ? 'auto' : 'none';
 
@@ -78,7 +90,8 @@ export default class Player extends Component {
     return (
       <View style={{width: fullWidth, height: fullHeight, backgroundColor: '#ffffff'}} pointerEvents={enableTouch}>
 
-        <Text style={s.title}>{this.props.currentMusic}</Text>
+        <Text style={s.title}>{this.props.currentMusicTitle}</Text>
+        <Text style={s.artist}>{this.props.currentMusicArtist}</Text>
 
         <Image style={s.cover} source={bgImg}></Image>
 
@@ -92,8 +105,18 @@ export default class Player extends Component {
         <TouchableOpacity style={s.forwardButton} onPress={this.fastForward.bind(this)}>
           <Svg width="37" height="37" source={require('../../asset/forward.svg')} />
         </TouchableOpacity>
-        <View style={s.progressBg} />
+
+        <View
+          style={s.progressBg}
+          hitSlop={{top: 10, bottom: 10, left: 0, right: 0}}
+          pointerEvents={'auto'}
+          onStartShouldSetResponder={() => true}
+          onResponderGrant={this.onProgressChange.bind(this)}
+          onResponderMove={this.onProgressChange.bind(this)}
+          onResponderRelease={this.onProgressChangeEnd.bind(this)}
+        />
         <View style={[s.progressFill, {width: this.state.progressBarWidth}]} />
+
         <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text>
         <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text>
       </View>
@@ -110,9 +133,19 @@ const s = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
+    fontFamily: 'roboto',
     position: 'absolute',
     left: fullWidth * 0.075,
-    top: fullHeight * 0.61,
+    top: fullHeight * 0.58,
+    width: 250,
+    color: '#606060',
+    fontSize: 18
+  },
+  artist: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    left: fullWidth * 0.075,
+    top: fullHeight * 0.63,
     width: 250,
     color: '#606060',
     fontSize: 16

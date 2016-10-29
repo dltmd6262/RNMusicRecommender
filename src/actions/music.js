@@ -14,11 +14,13 @@ export const showMusicPlayer = (show) => {
 
 export const PLAY_NEW_MUSIC = 'PLAY_NEW_MUSIC';
 
-const dispatchPlayNewMusic = (name, duration) => {
+const dispatchPlayNewMusic = (name, duration, title, artist) => {
   return {
     type: PLAY_NEW_MUSIC,
     currentMusicDuration: duration,
     currentMusic: name,
+    currentMusicTitle: title,
+    currentMusicArtist: artist,
     isPlaying: true,
   };
 };
@@ -27,7 +29,7 @@ export const playNewMusic = (path, name) => {
   return dispatch => {
     return runSafe(function *() {
       const result = yield NativeModules.MusicPlayer.playNewMusic(path);
-      dispatch(dispatchPlayNewMusic(name, result.duration));
+      dispatch(dispatchPlayNewMusic(name, result.duration, result.title, result.artist));
     });
   }
 };
@@ -44,6 +46,15 @@ export const rewind = (prev, currentMusic) => {
     } else {
       NativeModules.MusicPlayer.jumpTo(0);
     }
+  };
+};
+
+export const JUMP_TO = 'JUMP_TO';
+
+export const jumpTo = (milliSec) => {
+  NativeModules.MusicPlayer.jumpTo(milliSec);
+  return {
+    type: JUMP_TO,
   };
 };
 
