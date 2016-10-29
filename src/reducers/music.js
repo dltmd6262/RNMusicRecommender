@@ -28,6 +28,7 @@ const music = (state = {}, action) => {
         currentMusicDuration: action.currentMusicDuration,
         currentMusicTitle: action.currentMusicTitle,
         currentMusicArtist: action.currentMusicArtist,
+        currentMusicAlbum: action.currentMusicAlbum,
       };
     case CHANGE_SHUFFLE:
       return {

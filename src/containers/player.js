@@ -20,6 +20,7 @@ const mapStateToProps = (state) => {
     currentMusicDuration: state.Music.currentMusicDuration,
     currentMusicTitle: state.Music.currentMusicTitle,
     currentMusicArtist: state.Music.currentMusicArtist,
+    currentMusicAlbum: state.Music.currentMusicAlbum,
     shuffle: state.Music.shuffle,
     repeat: state.Music.repeat,
   };

@@ -84,10 +84,28 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             result.putInt("duration", this.currentMusic.getDuration());
 
             Cursor cur = rctContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, "_data = '" + filePath.getPath() + "'", null, null);
-            if (cur != null) {
-                cur.moveToFirst();
+            if (cur != null && cur.moveToFirst()) {
                 result.putString("title", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
                 result.putString("artist", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST)));
+
+                Cursor albumCur = rctContext.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        new String[] {MediaStore.Audio.Albums.ALBUM_ART},
+                        MediaStore.Audio.Albums._ID + '=' + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)),
+                        null, null
+                );
+
+                cur.close();
+
+                if (albumCur != null && albumCur.moveToFirst()) {
+                    String albumPath = albumCur.getString(albumCur.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                    result.putString("album", albumPath);
+                    albumCur.close();
+                    Log.i("com.media", "Album path is = " + albumPath);
+                } else {
+                    Log.i("com.media", "No album found");
+                }
+            } else {
+                Log.i("com.media", "No music metadata found");
             }
 
             promise.resolve(result);

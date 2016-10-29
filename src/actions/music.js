@@ -14,13 +14,14 @@ export const showMusicPlayer = (show) => {
 
 export const PLAY_NEW_MUSIC = 'PLAY_NEW_MUSIC';
 
-const dispatchPlayNewMusic = (name, duration, title, artist) => {
+const dispatchPlayNewMusic = (name, duration, title, artist, album) => {
   return {
     type: PLAY_NEW_MUSIC,
     currentMusicDuration: duration,
     currentMusic: name,
     currentMusicTitle: title,
     currentMusicArtist: artist,
+    currentMusicAlbum: album,
     isPlaying: true,
   };
 };
@@ -29,7 +30,7 @@ export const playNewMusic = (path, name) => {
   return dispatch => {
     return runSafe(function *() {
       const result = yield NativeModules.MusicPlayer.playNewMusic(path);
-      dispatch(dispatchPlayNewMusic(name, result.duration, result.title, result.artist));
+      dispatch(dispatchPlayNewMusic(name, result.duration, result.title, result.artist, result.album));
     });
   }
 };
