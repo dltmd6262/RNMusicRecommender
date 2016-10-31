@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import {milliToTimeString, getNextRepeatMode} from '../../util';
 import ReactNative, {DeviceEventEmitter} from 'react-native';
-import Svg from 'react-native-svg-uri';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import c from '../../constants';
 
 const {
@@ -18,8 +18,6 @@ const {
 
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 const bgImg = require('../../asset/test.jpg');
-const repeatOneIcon = require('../../asset/repeat_one.svg');
-const repeatAllIcon = require('../../asset/repeat_all.svg');
 
 export default class Player extends Component {
   constructor(props) {
@@ -52,12 +50,16 @@ export default class Player extends Component {
   }
 
   rewind() {
-    const shouldPlayPrevious = this.state.currentProgress < 2000;
-    this.props.rewind(shouldPlayPrevious, this.props.currentMusic);
+    if (this.props.currentMusic) {
+      const shouldPlayPrevious = this.state.currentProgress < 2000;
+      this.props.rewind(shouldPlayPrevious, this.props.currentMusic);
+    }
   }
 
   fastForward() {
-    this.props.fastForward(this.props.currentMusic);
+    if (this.props.currentMusic) {
+      this.props.fastForward(this.props.currentMusic);
+    }
   }
 
   changeShuffle() {
@@ -85,7 +87,7 @@ export default class Player extends Component {
 
     const shuffleOpacity = this.props.shuffle ? 1 : 0.7;
     const repeatOpacity = this.props.repeat === c.RepeatModes.None ? 0.7 : 1;
-    const repeatImage = this.props.repeat === c.RepeatModes.One ? repeatOneIcon : repeatAllIcon;
+    const repeatImage = this.props.repeat === c.RepeatModes.One ? 'repeat-one' : 'repeat';
 
     return (
       <View style={{width: fullWidth, height: fullHeight, backgroundColor: '#ffffff'}} pointerEvents={enableTouch}>
@@ -101,14 +103,14 @@ export default class Player extends Component {
         </View>
 
         <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
-          <Svg style={{opacity: repeatOpacity}} width="17" height="17" source={repeatImage} />
+          <MaterialIcon style={{opacity: repeatOpacity}} name={repeatImage} size={17} color="#606060" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={s.backButton} onPress={this.rewind.bind(this)}>
-          <Svg width="37" height="37" source={require('../../asset/back.svg')} />
+        <TouchableOpacity activeOpacity={1} style={s.backButton} onPress={this.rewind.bind(this)}>
+          <MaterialIcon name="skip-previous" size={37} color="#606060" />
         </TouchableOpacity>
-        <TouchableOpacity style={s.forwardButton} onPress={this.fastForward.bind(this)}>
-          <Svg width="37" height="37" source={require('../../asset/forward.svg')} />
+        <TouchableOpacity activeOpacity={1} style={s.forwardButton} onPress={this.fastForward.bind(this)}>
+          <MaterialIcon name="skip-next" size={37} color="#606060" />
         </TouchableOpacity>
 
         <View

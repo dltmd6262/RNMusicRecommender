@@ -35,7 +35,7 @@ class App extends Component {
 
     const playerBgOpacity = this.props.isShowingPlayer ? 1 : 0;
     const actionBtnRight = this.props.isShowingPlayer ? fullWidth / 2 - 30 : 30;
-    const actionBtnBottom = this.props.isShowingPlayer ? fullHeight * 0.1 : 30;
+    const actionBtnBottom = this.props.isShowingPlayer ? fullHeight * 0.095 : 30;
 
     Animated.timing(
       this.state.playerBgOpacity, {

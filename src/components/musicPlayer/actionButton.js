@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactNative from 'react-native';
-import Svg from 'react-native-svg-uri';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const {
   TouchableOpacity,
@@ -10,17 +10,15 @@ const {
 } = ReactNative;
 
 const ActionButton = ({isShowingPlayer, isPlaying, showMusicPlayer, playCurrentMusic, pauseCurrentMusic}) => {
-  let icon = isShowingPlayer ?
-    isPlaying ? require('../../asset/pause.svg') : require('../../asset/play.svg')
-    : require('../../asset/music.svg');
-
   let callback = isShowingPlayer ?
     isPlaying ? pauseCurrentMusic : playCurrentMusic
     : showMusicPlayer.bind(null, true);
 
+  const name = isShowingPlayer ? isPlaying ? 'pause' : 'play-arrow' : 'queue-music';
+
   return (
     <TouchableOpacity activeOpacity={1} style={s.button} onPress={callback}>
-      <Svg style={{alignSelf: 'center', marginTop: 16}} width="37" height="37" source={icon}/>
+      <MaterialIcon name={name} size={37} color="#606060" />
     </TouchableOpacity>
   )
 };
@@ -31,6 +29,8 @@ const s = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     backgroundColor: `#ffffff`,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
 
