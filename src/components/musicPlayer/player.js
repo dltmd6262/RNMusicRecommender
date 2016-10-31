@@ -70,6 +70,10 @@ export default class Player extends Component {
     this.props.changeRepeat(getNextRepeatMode(this.props.repeat));
   }
 
+  changeMute() {
+    this.props.changeMute(!this.props.mute);
+  }
+
   onProgressChange(e) {
     this.setState({
       progressBarWidth: e.nativeEvent.locationX,
@@ -111,6 +115,10 @@ export default class Player extends Component {
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={1} style={s.forwardButton} onPress={this.fastForward.bind(this)}>
           <MaterialIcon name="skip-next" size={37} color="#606060" />
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={1} style={s.mute} onPress={this.changeMute.bind(this)}>
+          <MaterialIcon name={this.props.mute ? 'volume-mute' : 'volume-up'} size={17} color="#606060" />
         </TouchableOpacity>
 
         <View
@@ -166,6 +174,11 @@ const s = StyleSheet.create({
     position: 'absolute',
     bottom: fullHeight * 0.12,
     left: fullWidth * 0.07,
+  },
+  mute: {
+    position: 'absolute',
+    bottom: fullHeight * 0.12,
+    right: fullWidth * 0.07,
   },
   shuffle: {
     position: 'absolute',

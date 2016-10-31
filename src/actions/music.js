@@ -123,3 +123,13 @@ export const changeRepeat = (mode) => {
     repeat: mode,
   };
 };
+
+export const CHANGE_MUTE = 'CHANGE_MUTE';
+
+export const changeMute = (mute) => {
+  NativeModules.MusicPlayer.changeMute(mute);
+  return {
+    type: CHANGE_MUTE,
+    mute: mute,
+  };
+};

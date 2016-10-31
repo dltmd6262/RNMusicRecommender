@@ -9,6 +9,7 @@ import {
   fastForward,
   changeRepeat,
   changeShuffle,
+  changeMute,
   jumpTo,
 } from '../actions/music';
 
@@ -23,6 +24,7 @@ const mapStateToProps = (state) => {
     currentMusicAlbum: state.Music.currentMusicAlbum,
     shuffle: state.Music.shuffle,
     repeat: state.Music.repeat,
+    mute: state.Music.mute,
   };
 };
 
@@ -48,6 +50,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     changeShuffle: (shouldShuffle) => {
       dispatch(changeShuffle(shouldShuffle));
+    },
+    changeMute: (mute) => {
+      dispatch(changeMute(mute));
     },
   };
 };

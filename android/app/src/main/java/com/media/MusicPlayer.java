@@ -161,4 +161,14 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             this.currentMusic.start();
         }
     }
+
+    @ReactMethod
+    public void changeMute(Boolean mute) {
+        if (this.currentMusic == null) {
+            Log.i("com.media", "No music is playing to mute");
+        }
+
+        Integer volume = mute ? 0 : 1;
+        this.currentMusic.setVolume(volume, volume);
+    }
 }
