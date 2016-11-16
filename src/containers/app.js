@@ -17,6 +17,7 @@ const {
   Easing,
   Dimensions,
   StatusBar,
+  NativeModules,
 } = ReactNative;
 
 class App extends Component {
@@ -28,6 +29,12 @@ class App extends Component {
       btnAnimX: new Animated.Value(50),
       btnAnimY: new Animated.Value(50),
     }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      NativeModules.FileSystem.stopSplashScreen();
+    }, 0);
   }
 
   render() {

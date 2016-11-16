@@ -1,15 +1,15 @@
 package com.filesystem;
 
-import android.media.MediaPlayer;
 import android.os.Environment;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.real_pitch.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,5 +60,13 @@ public class FileSystem extends ReactContextBaseJavaModule {
         walkFileTree(new File[]{root}, "root");
 
         promise.resolve(this.allFiles);
+    }
+
+    @ReactMethod
+    public void stopSplashScreen() {
+        MainActivity main = (MainActivity) getCurrentActivity();
+        if (main != null) {
+            main.stopSplashScreen();
+        }
     }
 }
