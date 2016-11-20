@@ -3,9 +3,9 @@ package com.real_pitch;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 
 import com.facebook.react.ReactActivity;
 
@@ -32,11 +32,8 @@ public class MainActivity extends ReactActivity {
         ((ViewGroup) splash.getParent()).setClipChildren(false);
 
         Animation translation = AnimationUtils.loadAnimation(this, R.anim.translate);
+        translation.setInterpolator(new LinearInterpolator());
         splash.findViewById(R.id.splash_screen).startAnimation(translation);
-
-        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in_trans);
-        fadeIn.setInterpolator(new AccelerateDecelerateInterpolator());
-        splash.findViewById(R.id.splash_title).startAnimation(fadeIn);
     }
 
     public void stopSplashScreen() {

@@ -3,25 +3,10 @@
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/splash_screen"
         android:orientation="vertical" android:layout_width="fill_parent" android:scaleType="centerCrop"
-        android:src="@drawable/splash_1_1"
+        android:src="@drawable/splash_1"
         android:layout_height="fill_parent"
         android:adjustViewBounds="false"
         android:cropToPadding="false"
         android:translationX="-100dp"
-        android:layout_marginRight="0dp">
-    </ImageView>
-
-    <TextView
-        android:text="Liston"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/splash_title"
-        android:layout_marginTop="160dp"
-        android:layout_marginLeft="71dp"
-        android:layout_marginStart="71dp"
-        android:textColor="@android:color/white"
-        android:textSize="36sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginRight="0dp" />
 </RelativeLayout>

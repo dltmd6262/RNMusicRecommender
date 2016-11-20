@@ -37,10 +37,12 @@ export default class Player extends Component {
     });
 
     DeviceEventEmitter.addListener('MusicProgress', (progress) => {
-      this.setState({
-        currentProgress: progress.currentPosition,
-        progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85),
-      });
+      if (!this.dragging) {
+        this.setState({
+          currentProgress: progress.currentPosition,
+          progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85),
+        });
+      }
     });
 
     DeviceEventEmitter.addListener('MusicCompleted', () => {
@@ -75,15 +77,17 @@ export default class Player extends Component {
   }
 
   onProgressChange(e) {
+    this.dragging = true;
     this.setState({
-      progressBarWidth: e.nativeEvent.locationX,
+      progressBarWidth: e.nativeEvent.pageX - fullWidth * 0.15 / 2,
     });
   }
 
   onProgressChangeEnd(e) {
     if (this.props.currentMusicDuration) {
-      this.props.jumpTo(parseInt(e.nativeEvent.locationX / (fullWidth * 0.85) * this.props.currentMusicDuration, 10));
+      this.props.jumpTo(parseInt((e.nativeEvent.pageX - (fullWidth * 0.15 / 2)) / (fullWidth * 0.85) * this.props.currentMusicDuration, 10));
     }
+    this.dragging = false;
   }
 
   render() {
