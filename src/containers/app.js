@@ -3,20 +3,17 @@
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
 import {connect} from 'react-redux';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import Newsfeed from './newsfeed';
-import Login from './login';
 import Files from './files';
 import ActionButton from './actionButton';
 import Player from './player';
 
 const {
   View,
+  Text,
   Animated,
   Easing,
   Dimensions,
-  StatusBar,
   NativeModules,
 } = ReactNative;
 
@@ -72,16 +69,10 @@ class App extends Component {
 
     return (
       <View style={{height: fullHeight, width: fullWidth}}>
-        <ScrollableTabView
-          style={{backgroundColor: '#faf2e8'}}
-          tabBarUnderlineColor='#ca6144'
-          tabBarBackgroundColor='#e9e6c9'
-          tabBarActiveTextColor='#ca6144'
-          tabBarInactiveTextColor='#e0b58c'>
-          <Files tabLabel="Music"/>
-          <Newsfeed tabLabel="Newsfeed"/>
-          <Login tabLabel="Profile"/>
-        </ScrollableTabView>
+        <View style={{width: fullWidth, height: 95, elevation: 2, backgroundColor: '#ffffff'}}>
+          <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 22, color: '#7b7b7b', fontFamily: 'roboto'}}>Liston</Text>
+        </View>
+        <Files/>
         <Animated.View style={{position: 'absolute', right: this.state.btnAnimX, bottom: this.state.btnAnimY, zIndex: 10, height: 60, width: 60}} pointerEvents={"box-none"}>
           <ActionButton/>
         </Animated.View>

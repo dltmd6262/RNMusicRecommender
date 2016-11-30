@@ -71,14 +71,20 @@ export default class FileList extends Component {
           path: f.path,
           onSelected
         };
-      }) : this.props.files.map(f => {return {name: f.name, onSelected}});
+      }) : this.props.files.map(f => {
+        return {
+          name: f.name,
+          tracks: f.files.length,
+          onSelected
+        };
+      });
 
     return (
       <ListView
         ref={ref => this.listView = ref}
         dataSource={this.state.dataSource.cloneWithRows(data)}
         renderRow={view}
-        style={{width: fullWidth}}
+        style={{backgroundColor: '#f5f5f5'}}
         renderSeparator={this.createSeparator}
       />
     )
