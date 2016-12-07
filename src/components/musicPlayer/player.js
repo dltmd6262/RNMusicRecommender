@@ -91,59 +91,150 @@ export default class Player extends Component {
   }
 
   render() {
-    const enableTouch = this.props.isShowingPlayer ? 'auto' : 'none';
-
-    const shuffleOpacity = this.props.shuffle ? 1 : 0.7;
+    const s = this.props.isShowingPlayer ? full : mini;
+    const playButtonCb = this.props.isPlaying ? this.props.pauseCurrentMusic : this.props.playCurrentMusic;
     const repeatOpacity = this.props.repeat === c.RepeatModes.None ? 0.7 : 1;
     const repeatImage = this.props.repeat === c.RepeatModes.One ? 'repeat-one' : 'repeat';
 
     return (
-      <View style={{width: fullWidth, height: fullHeight, backgroundColor: '#ffffff'}} pointerEvents={enableTouch}>
+      <TouchableOpacity activeOpacity={1} style={s.container} onPress={this.props.isShowingPlayer ? () => {} : this.props.showMusicPlayer.bind(this, true)}>
+        <View style={s.container}>
 
-        <Text style={s.title}>{this.props.currentMusicTitle}</Text>
-        <Text style={s.artist}>{this.props.currentMusicArtist}</Text>
+          <Text style={s.title} numberOfLines={1}>{this.props.currentMusicTitle}</Text>
+          <Text style={s.artist} numberOfLines={1}>{this.props.currentMusicArtist}</Text>
 
-        <View style={[s.cover, {marginTop: fullHeight * 0.12, backgroundColor: 'transparent'}]} elevation={50}>
+          <View style={[s.cover, {
+            marginTop: this.props.isShowingPlayer ? fullHeight * 0.12 : miniPlayerHeight * 0.35 / 4,
+            marginLeft: 15,
+            backgroundColor: 'transparent'
+          }]} elevation={50}>
+            {
+              this.props.currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + this.props.currentMusicAlbum}} />
+                : <Image style={s.cover} source={bgImg}/>
+            }
+          </View>
+
           {
-            this.props.currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + this.props.currentMusicAlbum}} />
-              : <Image style={s.cover} source={bgImg}></Image>
+            this.props.isShowingPlayer ?
+              <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
+                <MaterialIcon style={{opacity: repeatOpacity}} name={repeatImage} size={17} color="#606060" />
+              </TouchableOpacity> : null
+          }
+
+          <TouchableOpacity activeOpacity={1} style={s.backButton} onPress={this.rewind.bind(this)}>
+            <MaterialIcon name="skip-previous" size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={1} style={s.playButton} onPress={playButtonCb}>
+            <MaterialIcon name={this.props.isPlaying ? "pause" : "play-arrow"} size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={1} style={s.forwardButton} onPress={this.fastForward.bind(this)}>
+            <MaterialIcon name="skip-next" size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
+          </TouchableOpacity>
+
+          {
+            this.props.isShowingPlayer ?
+              <TouchableOpacity activeOpacity={1} style={s.mute} onPress={this.changeMute.bind(this)}>
+                <MaterialIcon name={this.props.mute ? 'volume-mute' : 'volume-up'} size={17} color="#606060" />
+              </TouchableOpacity> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View
+                style={s.progressBg}
+                hitSlop={{top: 10, bottom: 10, left: 0, right: 0}}
+                pointerEvents={'auto'}
+                onStartShouldSetResponder={() => true}
+                onResponderGrant={this.onProgressChange.bind(this)}
+                onResponderMove={this.onProgressChange.bind(this)}
+                onResponderRelease={this.onProgressChangeEnd.bind(this)}
+              /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View style={[s.progressFill, {width: this.state.progressBarWidth}]} /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text> : null
           }
         </View>
-
-        <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
-          <MaterialIcon style={{opacity: repeatOpacity}} name={repeatImage} size={17} color="#606060" />
-        </TouchableOpacity>
-
-        <TouchableOpacity activeOpacity={1} style={s.backButton} onPress={this.rewind.bind(this)}>
-          <MaterialIcon name="skip-previous" size={37} color="#606060" />
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={1} style={s.forwardButton} onPress={this.fastForward.bind(this)}>
-          <MaterialIcon name="skip-next" size={37} color="#606060" />
-        </TouchableOpacity>
-
-        <TouchableOpacity activeOpacity={1} style={s.mute} onPress={this.changeMute.bind(this)}>
-          <MaterialIcon name={this.props.mute ? 'volume-mute' : 'volume-up'} size={17} color="#606060" />
-        </TouchableOpacity>
-
-        <View
-          style={s.progressBg}
-          hitSlop={{top: 10, bottom: 10, left: 0, right: 0}}
-          pointerEvents={'auto'}
-          onStartShouldSetResponder={() => true}
-          onResponderGrant={this.onProgressChange.bind(this)}
-          onResponderMove={this.onProgressChange.bind(this)}
-          onResponderRelease={this.onProgressChangeEnd.bind(this)}
-        />
-        <View style={[s.progressFill, {width: this.state.progressBarWidth}]} />
-
-        <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text>
-        <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
 
-const s = StyleSheet.create({
+const miniPlayerHeight = 100;
+
+const mini = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: fullWidth,
+    height: miniPlayerHeight,
+    backgroundColor: '#ffffff',
+    elevation: 10,
+  },
+  cover: {
+    width: miniPlayerHeight * 0.65,
+    height: miniPlayerHeight * 0.65,
+    borderRadius: miniPlayerHeight * 0.65 / 2,
+  },
+  title: {
+    fontFamily: 'roboto',
+    position: 'absolute',
+    left: fullWidth * 0.25,
+    top: miniPlayerHeight * 0.18,
+    width: 130,
+    color: '#606060',
+    fontSize: 16,
+  },
+  artist: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    left: fullWidth * 0.25,
+    top: miniPlayerHeight * 0.40,
+    width: 130,
+    color: '#606060',
+    fontSize: 14,
+  },
+  backButton: {
+    position: 'absolute',
+    bottom: miniPlayerHeight * 0.5 - 30 / 4,
+    right: 120,
+  },
+  playButton: {
+    position: 'absolute',
+    bottom: miniPlayerHeight * 0.5 - 30 / 4,
+    right: 70,
+  },
+  forwardButton: {
+    position: 'absolute',
+    bottom: miniPlayerHeight * 0.5 - 30 / 4,
+    right: 20,
+  },
+});
+
+const full = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: fullWidth,
+    height: fullHeight,
+    backgroundColor: '#ffffff',
+    elevation: 10
+  },
   cover: {
     width: fullWidth * 0.75,
     height: fullWidth * 0.75,
@@ -194,6 +285,11 @@ const s = StyleSheet.create({
     position: 'absolute',
     bottom: fullHeight * 0.11,
     left: 80,
+  },
+  playButton: {
+    position: 'absolute',
+    bottom: fullHeight * 0.11,
+    left: fullWidth / 2 - 37 / 2
   },
   forwardButton: {
     position: 'absolute',

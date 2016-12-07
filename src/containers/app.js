@@ -11,8 +11,6 @@ import Player from './player';
 const {
   View,
   Text,
-  Animated,
-  Easing,
   Dimensions,
   NativeModules,
 } = ReactNative;
@@ -20,12 +18,6 @@ const {
 class App extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      playerBgOpacity: new Animated.Value(0),
-      btnAnimX: new Animated.Value(50),
-      btnAnimY: new Animated.Value(50),
-    }
   }
 
   componentDidMount() {
@@ -37,48 +29,15 @@ class App extends Component {
   render() {
     const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 
-    const playerBgOpacity = this.props.isShowingPlayer ? 1 : 0;
-    const actionBtnRight = this.props.isShowingPlayer ? fullWidth / 2 - 30 : 30;
-    const actionBtnBottom = this.props.isShowingPlayer ? fullHeight * 0.095 : 30;
-
-    Animated.timing(
-      this.state.playerBgOpacity, {
-        duration: 300,
-        toValue: playerBgOpacity,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
-
-    Animated.timing(
-      this.state.btnAnimX, {
-        delay: 100,
-        duration: 300,
-        toValue: actionBtnRight,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
-
-    Animated.timing(
-      this.state.btnAnimY, {
-        delay: 100,
-        duration: 300,
-        toValue: actionBtnBottom,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
-
     return (
       <View style={{height: fullHeight, width: fullWidth}}>
         <View style={{width: fullWidth, height: 95, elevation: 2, backgroundColor: '#ffffff'}}>
           <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 22, color: '#7b7b7b', fontFamily: 'roboto'}}>Liston</Text>
         </View>
-        <Files/>
-        <Animated.View style={{position: 'absolute', right: this.state.btnAnimX, bottom: this.state.btnAnimY, zIndex: 10, height: 60, width: 60}} pointerEvents={"box-none"}>
-          <ActionButton/>
-        </Animated.View>
-        <Animated.View style={{opacity: this.state.playerBgOpacity, backgroundColor: 'rgba(0, 0, 0, 0.8)', position: 'absolute', left: 0, bottom: 0, zIndex: 5}} pointerEvents={"box-none"}>
-          <Player />
-        </Animated.View>
+        <View style={{width: fullWidth, height: fullHeight - 95 - 100}}>
+          <Files/>
+        </View>
+        <Player/>
       </View>
     )
   }
