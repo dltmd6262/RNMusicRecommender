@@ -1,7 +1,9 @@
 package com.filesystem;
 
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -13,9 +15,6 @@ import com.facebook.react.bridge.WritableMap;
 import com.real_pitch.MainActivity;
 
 public class FileSystem extends ReactContextBaseJavaModule {
-
-    WritableArray allFiles = Arguments.createArray();
-
     public FileSystem (ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -25,53 +24,72 @@ public class FileSystem extends ReactContextBaseJavaModule {
         return "FileSystem";
     }
 
-    void walkFileTree() {
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+    private class SearchForMusicFiles extends AsyncTask<ReactApplicationContext, Integer, WritableArray> {
+        Promise fileSearchPromise = null;
 
-        String[] projection = {
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.ALBUM_ID,
-        };
+        public void setFileSearchPromise(Promise promise) {
+            fileSearchPromise = promise;
+        }
 
-        Cursor cursor = this.getReactApplicationContext().getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                selection,
-                null,
-                null);
+        @Override
+        protected WritableArray doInBackground(ReactApplicationContext... params) {
+            WritableArray allFiles = Arguments.createArray();
+            String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-        while(cursor != null & cursor.moveToNext()) {
-            WritableMap fileDB = Arguments.createMap();
+            String[] projection = {
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.DURATION,
+                    MediaStore.Audio.Media.ALBUM_ID,
+            };
 
-            fileDB.putString("artist", cursor.getString(0));
-            fileDB.putString("title", cursor.getString(1));
-            fileDB.putString("path", cursor.getString(2));
-            fileDB.putString("fileName", cursor.getString(1));
-            fileDB.putString("duration", cursor.getString(3));
+            Cursor cursor = params[0].getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    null,
+                    null);
 
-            Cursor albumCur = this.getReactApplicationContext().getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                    new String[] {MediaStore.Audio.Albums.ALBUM_ART},
-                    MediaStore.Audio.Albums._ID + '=' + cursor.getString(4),
-                    null, null
-            );
+            while(cursor != null & cursor.moveToNext()) {
+                WritableMap fileDB = Arguments.createMap();
 
-            if (albumCur != null && albumCur.moveToFirst()) {
-                String albumPath = albumCur.getString(albumCur.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-                fileDB.putString("album", albumPath);
-                albumCur.close();
+                fileDB.putString("artist", cursor.getString(0));
+                fileDB.putString("title", cursor.getString(1));
+                fileDB.putString("path", cursor.getString(2));
+                fileDB.putString("fileName", cursor.getString(1));
+                fileDB.putString("duration", cursor.getString(3));
+
+                Cursor albumCur = params[0].getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        new String[] {MediaStore.Audio.Albums.ALBUM_ART},
+                        MediaStore.Audio.Albums._ID + '=' + cursor.getString(4),
+                        null, null
+                );
+
+                if (albumCur != null && albumCur.moveToFirst()) {
+                    String albumPath = albumCur.getString(albumCur.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                    fileDB.putString("album", albumPath);
+                    albumCur.close();
+                }
+
+                allFiles.pushMap(fileDB);
             }
 
-            this.allFiles.pushMap(fileDB);
+            return allFiles;
+        }
+
+        protected void onPostExecute(WritableArray result) {
+            if (fileSearchPromise != null) {
+                fileSearchPromise.resolve(result);
+            }
         }
     }
 
     @ReactMethod
     public void getFoldersWithMusic(Promise promise) {
-        walkFileTree();
-        promise.resolve(this.allFiles);
+        SearchForMusicFiles search = new SearchForMusicFiles();
+        search.setFileSearchPromise(promise);
+        search.execute(getReactApplicationContext());
     }
 
     @ReactMethod
