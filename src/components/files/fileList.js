@@ -75,6 +75,7 @@ export default class FileList extends Component {
         return {
           name: f.name,
           tracks: f.files.length,
+          currentMusicAlbum: f.files.map(file => file.album).find(f => f),
           onSelected
         };
       });
