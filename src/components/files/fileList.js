@@ -46,13 +46,13 @@ export default class FileList extends Component {
   }
 
   showMusicInFolder(folderName) {
-    this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === folderName).files);
     this.setState({
       currentFolder: folderName,
     });
   }
 
   startPlayingMusic(path, name) {
+    this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === this.state.currentFolder).files);
     this.props.showMusicPlayer(true);
     this.props.playNewMusic(path, name);
   }
