@@ -37,7 +37,7 @@ export default class Player extends Component {
     });
 
     DeviceEventEmitter.addListener('MusicProgress', (progress) => {
-      if (!this.dragging) {
+      if (!this.dragging && this.props.isShowingPlayer) {
         this.setState({
           currentProgress: progress.currentPosition,
           progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85),
@@ -48,6 +48,26 @@ export default class Player extends Component {
     DeviceEventEmitter.addListener('MusicCompleted', () => {
       this.props.repeat === c.RepeatModes.One ?
         this.props.rewind(false, this.props.currentMusic) : this.fastForward();
+    });
+
+    DeviceEventEmitter.addListener('AudioFocusLoss', () => {
+      console.log('AUDIO_FOCUS_LOSS');
+      this.props.pauseCurrentMusic();
+    });
+
+    DeviceEventEmitter.addListener('AudioFocusLossTransient', () => {
+      console.log('AUDIO_FOCUS_LOSS_TRANSIENT');
+      this.props.pauseCurrentMusic();
+    });
+
+    DeviceEventEmitter.addListener('AudioFocusGain', () => {
+      console.log('AUDIO_FOCUS_GAIN');
+      this.props.playCurrentMusic();
+    });
+
+    DeviceEventEmitter.addListener('AudioFocusGainTransient', () => {
+      console.log('AUDIO_FOCUS_GAIN_TRANSIENT');
+      this.props.playCurrentMusic();
     });
   }
 

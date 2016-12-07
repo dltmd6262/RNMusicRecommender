@@ -38,6 +38,30 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         }
     };
 
+    private AudioManager.OnAudioFocusChangeListener focusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            switch (focusChange) {
+                case (AudioManager.AUDIOFOCUS_LOSS):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusLoss", Arguments.createMap());
+                    break;
+                case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusLossTransient", Arguments.createMap());
+                    break;
+                case (AudioManager.AUDIOFOCUS_GAIN):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusGain", Arguments.createMap());
+                    break;
+                case (AudioManager.AUDIOFOCUS_GAIN_TRANSIENT):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusGainTransient", Arguments.createMap());
+                    break;
+            }
+        }
+    };
+
     public MusicPlayer (ReactApplicationContext reactContext) {
         super(reactContext);
 
@@ -56,6 +80,9 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         Uri filePath = Uri.fromFile(new File(path));
         Log.w("com.media", filePath.toString());
         try {
+            AudioManager am = (AudioManager) getReactApplicationContext().getSystemService(getReactApplicationContext().AUDIO_SERVICE);
+            int permissionResult = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
             mProgressHandle.removeCallbacks(updateMusicProgress);
 
             if (this.currentMusic != null) {
@@ -122,6 +149,8 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             return;
         }
 
+        AudioManager am = (AudioManager) getReactApplicationContext().getSystemService(getReactApplicationContext().AUDIO_SERVICE);
+        int permissionResult = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         this.currentMusic.start();
     }
 
