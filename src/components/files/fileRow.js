@@ -4,7 +4,6 @@ import React from 'react';
 import ReactNative from 'react-native';
 
 var {
-  View,
   Image,
   Text,
   TouchableOpacity,
@@ -13,17 +12,14 @@ var {
 } = ReactNative;
 
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
-const fileIcon = require('../../asset/file.png');
 const bgImg = require('../../asset/test.jpg');
 
-export const FileRow = ({title, artist, path, onSelected}) => {
+export const FileRow = ({title, artist, duration, path, onSelected}) => {
   return (
     <TouchableOpacity style={s.file} activeOpacity={1} onPress={() => {onSelected(path, title)}}>
-      <Image style={s.icon} source={fileIcon}/>
-      <View style={s.fileTextContainer}>
-        <Text style={s.fileText}>{title}</Text>
-        <Text style={s.fileText}>{artist}</Text>
-      </View>
+      <Text numberOfLines={1} style={s.fileTitleText}>{title}</Text>
+      <Text numberOfLines={1} style={s.fileArtistText}>{artist}</Text>
+      <Text numberOfLines={1} style={s.fileDurationText}>{duration}</Text>
     </TouchableOpacity>
   );
 };
@@ -41,13 +37,13 @@ export const FolderRow = ({name, tracks, currentMusicAlbum, onSelected}) => {
   );
 };
 
+const fileRowHeight = 65;
+
 const s = StyleSheet.create({
   file: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#ffffff',
     width: fullWidth,
-    height: 70,
+    height: fileRowHeight,
   },
   folder: {
     marginTop: 5,
@@ -90,9 +86,31 @@ const s = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
-  fileText: {
-    alignSelf: 'flex-start',
-    color: '#361821',
+  fileTitleText: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    color: '#515151',
+    fontSize: 15,
+    width: 220,
+    top: fileRowHeight * 0.35,
+    left: fullWidth * 0.23,
+  },
+  fileArtistText: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    color: '#a2a2a2',
+    fontSize: 15,
+    width: 220,
+    top: fileRowHeight * 0.6,
+    left: fullWidth * 0.23,
+  },
+  fileDurationText: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    color: '#a2a2a2',
+    fontSize: 15,
+    top: fileRowHeight * 0.35,
+    right: fullWidth * 0.1,
   },
   folderText: {
     position: 'absolute',
