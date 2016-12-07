@@ -9,8 +9,10 @@ var {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Dimensions,
 } = ReactNative;
 
+const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 const fileIcon = require('../../asset/file.png');
 const bgImg = require('../../asset/test.jpg');
 
@@ -29,15 +31,12 @@ export const FileRow = ({title, artist, path, onSelected}) => {
 export const FolderRow = ({name, tracks, currentMusicAlbum, onSelected}) => {
   return (
     <TouchableOpacity style={s.folder} activeOpacity={1} onPress={() => {onSelected(name)}}>
-      <View style={[s.cover, {marginTop: 140 * 0.25 / 2, backgroundColor: 'transparent'}]}>
-        {
-          currentMusicAlbum ? <Image style={[s.cover, {left: 0}]} source={{uri: 'file://' + currentMusicAlbum}} />
-            : <Image style={[s.cover, {left: 0}]} source={bgImg}></Image>
-        }
-      </View>
-      <Text style={s.folderText}>{name}</Text>
-      <Text style={s.trackText}>{`${tracks} tracks`}</Text>
-      <Text style={s.dateText}>{'2016.11.04'}</Text>
+      {
+        currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + currentMusicAlbum}} />
+          : <Image style={s.cover} source={bgImg}/>
+      }
+      <Text numberOfLines={1} style={s.folderText}>{name}</Text>
+      <Text numberOfLines={1} style={s.trackText}>{`${tracks} tracks`}</Text>
     </TouchableOpacity>
   );
 };
@@ -47,18 +46,20 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: fullWidth,
     height: 70,
   },
   folder: {
-    marginTop: 3,
-    marginBottom: 3,
-    marginLeft: 5,
-    marginRight: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: fullWidth * (1 - 0.48 * 2) / 4,
+    marginRight: fullWidth * (1 - 0.48 * 2) / 4,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    height: 140,
+    height: 260,
+    width: fullWidth * 0.48,
     elevation: 2
   },
   row: {
@@ -95,17 +96,20 @@ const s = StyleSheet.create({
   },
   folderText: {
     position: 'absolute',
-    fontFamily: 'roboto',
-    fontSize: 20,
-    left: 150,
-    marginTop: 20,
+    fontFamily: 'roboto_light',
+    fontSize: 22,
+    width: fullWidth * 0.48,
+    left: 10,
+    bottom: 33,
     color: '#515151',
   },
   trackText: {
     position: 'absolute',
-    fontFamily: 'roboto',
-    left: 150,
-    marginTop: 75,
+    fontFamily: 'roboto_light',
+    width: fullWidth * 0.48,
+    fontSize: 15,
+    left: 10,
+    bottom: 12,
     color: '#7b7b7b'
   },
   dateText: {
@@ -117,9 +121,9 @@ const s = StyleSheet.create({
   },
   cover: {
     position: 'absolute',
-    left: 15,
-    width: 140 * 0.75,
-    height: 140 * 0.75,
-    borderRadius: 140 * 0.75 / 2,
+    top: 0,
+    left: 0,
+    width: fullWidth * 0.48,
+    height: fullWidth * 0.48,
   },
 });

@@ -31,10 +31,10 @@ class App extends Component {
 
     return (
       <View style={{height: fullHeight, width: fullWidth}}>
-        <View style={{width: fullWidth, height: 95, elevation: 2, backgroundColor: '#ffffff'}}>
-          <Text style={{alignSelf: 'center', marginTop: 50, fontSize: 22, color: '#7b7b7b', fontFamily: 'roboto'}}>Liston</Text>
+        <View style={{width: fullWidth, height: 80, elevation: 2, backgroundColor: '#ffffff'}}>
+          <Text style={{alignSelf: 'center', marginTop: 40, fontSize: 22, color: '#7b7b7b', fontFamily: 'roboto'}}>Liston</Text>
         </View>
-        <View style={{width: fullWidth, height: fullHeight - 95 - 100}}>
+        <View style={{width: fullWidth, height: fullHeight - 80 - 100}}>
           <Files/>
         </View>
         <Player/>

@@ -84,6 +84,7 @@ export default class FileList extends Component {
         ref={ref => this.listView = ref}
         dataSource={this.state.dataSource.cloneWithRows(data)}
         renderRow={view}
+        contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}
         style={{backgroundColor: '#f5f5f5'}}
         renderSeparator={this.createSeparator}
       />
