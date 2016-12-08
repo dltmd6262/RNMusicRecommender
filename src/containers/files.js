@@ -3,7 +3,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import FileList from '../components/files/fileList';
-import {updateCurrentPlaylist} from '../actions/files';
+import {updateCurrentPlaylist, updateCurrentFolder} from '../actions/files';
 import {playNewMusic, showMusicPlayer} from '../actions/music';
 
 const mapStateToProps = (state) => {
@@ -11,6 +11,7 @@ const mapStateToProps = (state) => {
     isShowingPlayer: state.Music.isShowingPlayer,
     playlist: state.Files.playlist,
     files: state.Files.files,
+    currentFolder: state.Files.currentFolder,
   };
 };
 
@@ -24,6 +25,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateCurrentPlaylist: (list) => {
       dispatch(updateCurrentPlaylist(list));
+    },
+    updateCurrentFolder: (folderName) => {
+      dispatch(updateCurrentFolder(folderName));
     },
   };
 };

@@ -57,17 +57,14 @@ export default class FileList extends Component {
     super(props);
     this.wasShowingPlayer = false;
     this.state = {
-      currentFolder: null,
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
   }
 
   componentDidMount() {
     BackAndroid.addEventListener('goToFolders', () => {
-      if (this.state.currentFolder && !this.wasShowingPlayer) {
-        this.setState({
-          currentFolder: null,
-        });
+      if (this.props.currentFolder && !this.wasShowingPlayer) {
+        this.props.updateCurrentFolder(null);
         this.listView.scrollTo({y: 0});
       }
 
@@ -77,6 +74,10 @@ export default class FileList extends Component {
     });
   }
 
+  componentWillReceiveProps() {
+    if (this.listView) this.listView.scrollTo({y: 0});
+  }
+
   static createSeparator() {
     return (
       <View style={{height: 1, backgroundColor: '#f2c492'}}/>
@@ -84,26 +85,24 @@ export default class FileList extends Component {
   }
 
   showMusicInFolder(folderName) {
-    this.setState({
-      currentFolder: folderName,
-    });
+    if (this.listView) this.listView.scrollTo({y: 0});
+    this.props.updateCurrentFolder(folderName);
   }
 
   startPlayingMusic(path, name) {
-    this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === this.state.currentFolder).files);
+    this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === this.props.currentFolder).files);
     this.props.showMusicPlayer(true);
     this.props.playNewMusic(path, name);
   }
 
   render() {
     if (this.props.isShowingPlayer) {this.wasShowingPlayer = true}
-    if (this.listView) this.listView.scrollTo({y: 0});
-    const view = this.state.currentFolder ? FileRow : FolderRow;
-    const onSelected = this.state.currentFolder ?
+    const view = this.props.currentFolder ? FileRow : FolderRow;
+    const onSelected = this.props.currentFolder ?
       this.startPlayingMusic.bind(this) : this.showMusicInFolder.bind(this);
 
-    const data = this.state.currentFolder ?
-      this.props.files.find(f => f.name === this.state.currentFolder).files.map(f => {
+    const data = this.props.currentFolder ?
+      this.props.files.find(f => f.name === this.props.currentFolder).files.map(f => {
         return {
           title: f.title,
           artist: f.artist,
@@ -120,14 +119,14 @@ export default class FileList extends Component {
         };
       });
 
-    const currentFolder = this.props.files.find(f => f.name === this.state.currentFolder);
+    const currentFolder = this.props.files.find(f => f.name === this.props.currentFolder);
 
     return (
       <ListView
         ref={ref => this.listView = ref}
         dataSource={this.state.dataSource.cloneWithRows(data)}
         renderRow={view}
-        renderHeader={this.state.currentFolder ? Header.bind(this, currentFolder.files.map(file => file.album).find(f => f), currentFolder.name) : null}
+        renderHeader={this.props.currentFolder ? Header.bind(this, currentFolder.files.map(file => file.album).find(f => f), currentFolder.name) : null}
         contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}
         style={{backgroundColor: '#f5f5f5'}}
         renderSeparator={this.createSeparator}

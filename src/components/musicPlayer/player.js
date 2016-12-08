@@ -120,6 +120,12 @@ export default class Player extends Component {
       <TouchableOpacity activeOpacity={1} style={s.container} onPress={this.props.isShowingPlayer ? () => {} : this.props.showMusicPlayer.bind(this, true)}>
         <View style={s.container}>
 
+          {
+            this.props.isShowingPlayer ? <TouchableOpacity style={{width: 35, height: 35, position: 'absolute', top: 33, left: 18}} activeOpacity={1} onPress={this.props.showMusicPlayer.bind(this, false)}>
+              <MaterialIcon name="arrow-downward" size={35} color="#a2a2a2" />
+            </TouchableOpacity> : null
+          }
+
           <Text style={s.title} numberOfLines={1}>{this.props.currentMusicTitle}</Text>
           <Text style={s.artist} numberOfLines={1}>{this.props.currentMusicArtist}</Text>
 
@@ -276,7 +282,7 @@ const full = StyleSheet.create({
     left: fullWidth * 0.075,
     top: fullHeight * 0.63,
     width: 250,
-    color: '#606060',
+    color: '#a2a2a2',
     fontSize: 16
   },
   closeButton: {

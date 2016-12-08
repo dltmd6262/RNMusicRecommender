@@ -63,3 +63,12 @@ export const updateCurrentPlaylist = (list) => {
     list,
   };
 };
+
+export const UPDATE_CURRENT_FOLDER = 'UPDATE_CURRENT_FOLDER';
+
+export const updateCurrentFolder = (folderName) => {
+  return {
+    type: UPDATE_CURRENT_FOLDER,
+    currentFolder: folderName
+  }
+}

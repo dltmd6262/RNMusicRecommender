@@ -1,6 +1,7 @@
 import {
   UPDATE_FILE_STRUCTURE,
   UPDATE_CURRENT_PLAYLIST,
+  UPDATE_CURRENT_FOLDER,
 } from '../actions/files';
 
 const files = (state = {}, action) => {
@@ -14,6 +15,11 @@ const files = (state = {}, action) => {
       return {
         ...state,
         playlist: action.list,
+      };
+    case UPDATE_CURRENT_FOLDER:
+      return {
+        ...state,
+        currentFolder: action.currentFolder
       };
     default:
       return state;
