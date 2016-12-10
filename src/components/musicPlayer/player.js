@@ -229,7 +229,7 @@ const mini = StyleSheet.create({
     fontFamily: 'roboto_light',
     position: 'absolute',
     left: fullWidth * 0.25,
-    top: miniPlayerHeight * 0.30,
+    top: miniPlayerHeight * 0.4,
     width: 130,
     color: '#606060',
     fontSize: 14,
@@ -280,7 +280,7 @@ const full = StyleSheet.create({
     fontFamily: 'roboto_light',
     position: 'absolute',
     left: fullWidth * 0.075,
-    top: fullHeight * 0.63,
+    top: fullHeight * 0.621,
     width: 250,
     color: '#a2a2a2',
     fontSize: 16
