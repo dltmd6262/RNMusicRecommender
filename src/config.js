@@ -33,9 +33,14 @@ var NativeModuleMockup = {
     pauseCurrentMusic: function () {},
 
     /**
-     * @param loc Music location to jump to
+     * @param {Integer} loc Music location to jump to
      */
     jumpTo: function (loc) {},
+
+    /**
+     * @param {boolean} mute
+     */
+    changeMute: function (mute) {},
   },
   FileSystem: {
     /**

@@ -2,84 +2,50 @@
 
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
+import {updateCurrentFolder} from '../actions/files';
 
-import Newsfeed from './newsfeed';
-import Login from './login';
 import Files from './files';
-import ActionButton from './actionButton';
 import Player from './player';
 
 const {
   View,
-  Animated,
-  Easing,
-  Dimensions
+  Text,
+  Dimensions,
+  NativeModules,
+  TouchableOpacity,
 } = ReactNative;
 
 class App extends Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      playerBgOpacity: new Animated.Value(0),
-      btnAnimX: new Animated.Value(50),
-      btnAnimY: new Animated.Value(50),
-    }
+  componentDidMount() {
+    setTimeout(() => {
+      NativeModules.FileSystem.stopSplashScreen();
+    }, 0);
   }
 
   render() {
     const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 
-    const playerBgOpacity = this.props.isShowingPlayer ? 1 : 0;
-    const actionBtnRight = this.props.isShowingPlayer ? fullWidth / 2 - 30 : 30;
-    const actionBtnBottom = this.props.isShowingPlayer ? 95 : 30;
-
-    Animated.timing(
-      this.state.playerBgOpacity, {
-        duration: 300,
-        toValue: playerBgOpacity,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
-
-    Animated.timing(
-      this.state.btnAnimX, {
-        delay: 100,
-        duration: 300,
-        toValue: actionBtnRight,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
-
-    Animated.timing(
-      this.state.btnAnimY, {
-        delay: 100,
-        duration: 300,
-        toValue: actionBtnBottom,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
-
     return (
       <View style={{height: fullHeight, width: fullWidth}}>
-        <ScrollableTabView
-          style={{backgroundColor: '#faf2e8'}}
-          tabBarUnderlineColor='#ca6144'
-          tabBarBackgroundColor='#e9e6c9'
-          tabBarActiveTextColor='#ca6144'
-          tabBarInactiveTextColor='#e0b58c'>
-          <Files tabLabel="Music"/>
-          <Newsfeed tabLabel="Newsfeed"/>
-          <Login tabLabel="Profile"/>
-        </ScrollableTabView>
-        <Animated.View style={{position: 'absolute', right: this.state.btnAnimX, bottom: this.state.btnAnimY, zIndex: 10, height: 60, width: 60}} pointerEvents={"box-none"}>
-          <ActionButton/>
-        </Animated.View>
-        <Animated.View style={{opacity: this.state.playerBgOpacity, backgroundColor: 'rgba(0, 0, 0, 0.8)', position: 'absolute', left: 0, bottom: 0, zIndex: 5}} pointerEvents={"box-none"}>
-          <Player />
-        </Animated.View>
+        <View style={{width: fullWidth, height: 80, elevation: 2, backgroundColor: '#ffffff'}}>
+          {
+            this.props.currentFolder ?
+              <TouchableOpacity style={{width: 35, height: 35, position: 'absolute', top: 33, left: 18}} activeOpacity={1} onPress={this.props.updateCurrentFolder.bind(this, null)}>
+                <MaterialIcon name="arrow-back" size={35} color="#a2a2a2" />
+              </TouchableOpacity> : null
+          }
+          <Text style={{alignSelf: 'center', marginTop: 30, fontSize: 27, color: '#afafaf', fontFamily: 'roboto_light'}}>Liston</Text>
+        </View>
+        <View style={{width: fullWidth, height: fullHeight - 80 - 100}}>
+          <Files/>
+        </View>
+        <Player/>
       </View>
     )
   }
@@ -88,11 +54,16 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     isShowingPlayer: state.Music.isShowingPlayer,
+    currentFolder: state.Files.currentFolder,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    updateCurrentFolder: (folderName) => {
+      dispatch(updateCurrentFolder(folderName));
+    },
+  };
 };
 
 export default connect(

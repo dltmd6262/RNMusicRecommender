@@ -5,6 +5,7 @@ import {
   PLAY_NEW_MUSIC,
   CHANGE_SHUFFLE,
   CHANGE_REPEAT,
+  CHANGE_MUTE,
 } from '../actions/music';
 
 const music = (state = {}, action) => {
@@ -26,6 +27,9 @@ const music = (state = {}, action) => {
         isPlaying: action.isPlaying,
         currentMusic: action.currentMusic,
         currentMusicDuration: action.currentMusicDuration,
+        currentMusicTitle: action.currentMusicTitle,
+        currentMusicArtist: action.currentMusicArtist,
+        currentMusicAlbum: action.currentMusicAlbum,
       };
     case CHANGE_SHUFFLE:
       return {
@@ -36,6 +40,11 @@ const music = (state = {}, action) => {
       return {
         ...state,
         repeat: action.repeat,
+      };
+    case CHANGE_MUTE:
+      return {
+        ...state,
+        mute: action.mute,
       };
     default:
       return state;

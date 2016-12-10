@@ -12,22 +12,41 @@ const dispatchFileStructure = (files) => {
   }
 };
 
+const sortFilesByFolder = (fileList) => {
+  let filesList = [];
+  fileList.forEach(f => {
+    const splitPath = f.path.split('/');
+    const folderName = splitPath[splitPath.length - 2];
+    const fileIdx = filesList.findIndex(folder => folder.name === folderName);
+
+    if (fileIdx === -1) {
+      filesList.push({
+        name: folderName,
+        files: [f],
+      })
+    } else {
+      filesList[fileIdx].files.push(f);
+    }
+  });
+
+  return filesList;
+};
+
 export const updateFileStructure = () => {
   return function (dispatch) {
     return runSafe(function *() {
       const fileStructure = yield AsyncStorage.getItem("file_structure");
-
       if (fileStructure) {
         dispatch(dispatchFileStructure(JSON.parse(fileStructure)));
         NativeModules.FileSystem.getFoldersWithMusic()
           .then(f => {
-            f = f.filter(folder => folder.files.length > 0);
+            f = sortFilesByFolder(f);
             dispatch(dispatchFileStructure(f));
             AsyncStorage.setItem("file_structure", JSON.stringify(f));
           });
       } else {
         let fileStructure = yield NativeModules.FileSystem.getFoldersWithMusic();
-        fileStructure = fileStructure.filter(f => f.files.length > 0);
+        fileStructure = sortFilesByFolder(fileStructure);
         AsyncStorage.setItem("file_structure", JSON.stringify(fileStructure));
 
         dispatch(dispatchFileStructure(fileStructure));
@@ -44,3 +63,12 @@ export const updateCurrentPlaylist = (list) => {
     list,
   };
 };
+
+export const UPDATE_CURRENT_FOLDER = 'UPDATE_CURRENT_FOLDER';
+
+export const updateCurrentFolder = (folderName) => {
+  return {
+    type: UPDATE_CURRENT_FOLDER,
+    currentFolder: folderName
+  }
+}

@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -36,6 +38,30 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         }
     };
 
+    private AudioManager.OnAudioFocusChangeListener focusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            switch (focusChange) {
+                case (AudioManager.AUDIOFOCUS_LOSS):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusLoss", Arguments.createMap());
+                    break;
+                case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusLossTransient", Arguments.createMap());
+                    break;
+                case (AudioManager.AUDIOFOCUS_GAIN):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusGain", Arguments.createMap());
+                    break;
+                case (AudioManager.AUDIOFOCUS_GAIN_TRANSIENT):
+                    getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit("AudioFocusGainTransient", Arguments.createMap());
+                    break;
+            }
+        }
+    };
+
     public MusicPlayer (ReactApplicationContext reactContext) {
         super(reactContext);
 
@@ -54,6 +80,9 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         Uri filePath = Uri.fromFile(new File(path));
         Log.w("com.media", filePath.toString());
         try {
+            AudioManager am = (AudioManager) getReactApplicationContext().getSystemService(getReactApplicationContext().AUDIO_SERVICE);
+            int permissionResult = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
             mProgressHandle.removeCallbacks(updateMusicProgress);
 
             if (this.currentMusic != null) {
@@ -81,6 +110,31 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             WritableMap result = Arguments.createMap();
             result.putInt("duration", this.currentMusic.getDuration());
 
+            Cursor cur = rctContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, "_data = '" + filePath.getPath() + "'", null, null);
+            if (cur != null && cur.moveToFirst()) {
+                result.putString("title", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                result.putString("artist", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST)));
+
+                Cursor albumCur = rctContext.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        new String[] {MediaStore.Audio.Albums.ALBUM_ART},
+                        MediaStore.Audio.Albums._ID + '=' + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)),
+                        null, null
+                );
+
+                cur.close();
+
+                if (albumCur != null && albumCur.moveToFirst()) {
+                    String albumPath = albumCur.getString(albumCur.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                    result.putString("album", albumPath);
+                    albumCur.close();
+                    Log.i("com.media", "Album path is = " + albumPath);
+                } else {
+                    Log.i("com.media", "No album found");
+                }
+            } else {
+                Log.i("com.media", "No music metadata found");
+            }
+
             promise.resolve(result);
         } catch (Exception e) {
             promise.reject(e);
@@ -95,6 +149,8 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             return;
         }
 
+        AudioManager am = (AudioManager) getReactApplicationContext().getSystemService(getReactApplicationContext().AUDIO_SERVICE);
+        int permissionResult = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         this.currentMusic.start();
     }
 
@@ -133,5 +189,15 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
         if (!this.currentMusic.isPlaying()) {
             this.currentMusic.start();
         }
+    }
+
+    @ReactMethod
+    public void changeMute(Boolean mute) {
+        if (this.currentMusic == null) {
+            Log.i("com.media", "No music is playing to mute");
+        }
+
+        Integer volume = mute ? 0 : 1;
+        this.currentMusic.setVolume(volume, volume);
     }
 }

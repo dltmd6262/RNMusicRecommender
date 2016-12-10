@@ -2,25 +2,23 @@
 
 import React from 'react';
 import ReactNative from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const {
-  Image,
   TouchableOpacity,
   StyleSheet,
 } = ReactNative;
 
 const ActionButton = ({isShowingPlayer, isPlaying, showMusicPlayer, playCurrentMusic, pauseCurrentMusic}) => {
-  let icon = isShowingPlayer ?
-    isPlaying ? require('../../asset/pause.png') : require('../../asset/play.png')
-    : require('../../asset/music.png');
-
   let callback = isShowingPlayer ?
     isPlaying ? pauseCurrentMusic : playCurrentMusic
     : showMusicPlayer.bind(null, true);
 
+  const name = isShowingPlayer ? isPlaying ? 'pause' : 'play-arrow' : 'queue-music';
+
   return (
     <TouchableOpacity activeOpacity={1} style={s.button} onPress={callback}>
-      <Image style={s.icon} source={icon} />
+      <MaterialIcon name={name} size={37} color="#606060" />
     </TouchableOpacity>
   )
 };
@@ -30,12 +28,9 @@ const s = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: `#ee9459`,
-  },
-  icon: {
-    alignSelf: 'center',
-    marginTop: 5,
-    tintColor: '#fbeacf',
+    backgroundColor: `#ffffff`,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
 

@@ -1,15 +1,13 @@
 'use strict';
 
-import _ from 'lodash';
 import React, {Component} from 'react';
 import {milliToTimeString, getNextRepeatMode} from '../../util';
 import ReactNative, {DeviceEventEmitter} from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import c from '../../constants';
 
 const {
   BackAndroid,
-  Easing,
-  Animated,
   View,
   Text,
   Image,
@@ -19,13 +17,7 @@ const {
 } = ReactNative;
 
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
-const closeIcon = require('../../asset/close.png');
 const bgImg = require('../../asset/test.jpg');
-const repeatOneIcon = require('../../asset/repeat_one.png');
-const repeatAllIcon = require('../../asset/repeat_all.png');
-const shuffleIcon = require('../../asset/shuffle.png');
-const backIcon = require('../../asset/back.png');
-const forwardIcon = require('../../asset/forward.png');
 
 export default class Player extends Component {
   constructor(props) {
@@ -33,9 +25,6 @@ export default class Player extends Component {
     this.state = {
       progressBarWidth: 0,
       currentProgress: milliToTimeString(0),
-      topBgLeft: new Animated.Value(Dimensions.get('window').width),
-      controlBgY: new Animated.Value(150),
-      controlBgYLower: new Animated.Value(0),
     };
   }
 
@@ -48,52 +37,51 @@ export default class Player extends Component {
     });
 
     DeviceEventEmitter.addListener('MusicProgress', (progress) => {
-      this.setState({
-        currentProgress: progress.currentPosition,
-        progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * 230,
-      });
+      if (!this.dragging && this.props.isShowingPlayer) {
+        this.setState({
+          currentProgress: progress.currentPosition,
+          progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85),
+        });
+      }
     });
 
     DeviceEventEmitter.addListener('MusicCompleted', () => {
       this.props.repeat === c.RepeatModes.One ?
         this.props.rewind(false, this.props.currentMusic) : this.fastForward();
     });
-  }
 
-  startAnimation(topBgLeft, controlBgY, controlBgYLower) {
-    Animated.timing(
-      this.state.topBgLeft, {
-        delay: 100,
-        duration: 300,
-        toValue: topBgLeft,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
+    DeviceEventEmitter.addListener('AudioFocusLoss', () => {
+      console.log('AUDIO_FOCUS_LOSS');
+      this.props.pauseCurrentMusic();
+    });
 
-    Animated.timing(
-      this.state.controlBgY, {
-        duration: 300,
-        toValue: controlBgY,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
+    DeviceEventEmitter.addListener('AudioFocusLossTransient', () => {
+      console.log('AUDIO_FOCUS_LOSS_TRANSIENT');
+      this.props.pauseCurrentMusic();
+    });
 
-    Animated.timing(
-      this.state.controlBgYLower, {
-        duration: 300,
-        toValue: controlBgYLower,
-        easing: Easing.out(Easing.cubic),
-      }
-    ).start();
+    DeviceEventEmitter.addListener('AudioFocusGain', () => {
+      console.log('AUDIO_FOCUS_GAIN');
+      this.props.playCurrentMusic();
+    });
+
+    DeviceEventEmitter.addListener('AudioFocusGainTransient', () => {
+      console.log('AUDIO_FOCUS_GAIN_TRANSIENT');
+      this.props.playCurrentMusic();
+    });
   }
 
   rewind() {
-    const shouldPlayPrevious = this.state.currentProgress < 2000;
-    this.props.rewind(shouldPlayPrevious, this.props.currentMusic);
+    if (this.props.currentMusic) {
+      const shouldPlayPrevious = this.state.currentProgress < 2000;
+      this.props.rewind(shouldPlayPrevious, this.props.currentMusic);
+    }
   }
 
   fastForward() {
-    this.props.fastForward(this.props.currentMusic);
+    if (this.props.currentMusic) {
+      this.props.fastForward(this.props.currentMusic);
+    }
   }
 
   changeShuffle() {
@@ -104,88 +92,198 @@ export default class Player extends Component {
     this.props.changeRepeat(getNextRepeatMode(this.props.repeat));
   }
 
+  changeMute() {
+    this.props.changeMute(!this.props.mute);
+  }
+
+  onProgressChange(e) {
+    this.dragging = true;
+    this.setState({
+      progressBarWidth: e.nativeEvent.pageX - fullWidth * 0.15 / 2,
+    });
+  }
+
+  onProgressChangeEnd(e) {
+    if (this.props.currentMusicDuration) {
+      this.props.jumpTo(parseInt((e.nativeEvent.pageX - (fullWidth * 0.15 / 2)) / (fullWidth * 0.85) * this.props.currentMusicDuration, 10));
+    }
+    this.dragging = false;
+  }
+
   render() {
-    const enableTouch = this.props.isShowingPlayer ? 'auto' : 'none';
-    const topBgLeft = this.props.isShowingPlayer ? 0 : fullWidth;
-    const controlBgY = this.props.isShowingPlayer ? 150 : -50;
-    const controlBgYLower = this.props.isShowingPlayer ? 0 : -200;
-
-    this.startAnimation(topBgLeft, controlBgY, controlBgYLower);
-
-    const shuffleOpacity = this.props.shuffle ? 1 : 0.7;
+    const s = this.props.isShowingPlayer ? full : mini;
+    const playButtonCb = this.props.isPlaying ? this.props.pauseCurrentMusic : this.props.playCurrentMusic;
     const repeatOpacity = this.props.repeat === c.RepeatModes.None ? 0.7 : 1;
-    const repeatImage = this.props.repeat === c.RepeatModes.One ? repeatOneIcon : repeatAllIcon;
+    const repeatImage = this.props.repeat === c.RepeatModes.One ? 'repeat-one' : 'repeat';
 
     return (
-      <View style={{width: fullWidth, height: fullHeight}} pointerEvents={enableTouch}>
-        <Image style={s.bgImage} source={bgImg}/>
-        <Text style={s.title}>{this.props.currentMusic}</Text>
-        <Animated.View style={[s.upperTriangle, {left: this.state.topBgLeft}]}>
-          <TouchableOpacity style={s.closeButton} onPress={this.props.showMusicPlayer.bind(this, false)}>
-            <Image source={closeIcon} />
+      <TouchableOpacity activeOpacity={1} style={s.container} onPress={this.props.isShowingPlayer ? () => {} : this.props.showMusicPlayer.bind(this, true)}>
+        <View style={s.container}>
+
+          {
+            this.props.isShowingPlayer ? <TouchableOpacity style={{width: 35, height: 35, position: 'absolute', top: 33, left: 18}} activeOpacity={1} onPress={this.props.showMusicPlayer.bind(this, false)}>
+              <MaterialIcon name="arrow-downward" size={35} color="#a2a2a2" />
+            </TouchableOpacity> : null
+          }
+
+          <Text style={s.title} numberOfLines={1}>{this.props.currentMusicTitle}</Text>
+          <Text style={s.artist} numberOfLines={1}>{this.props.currentMusicArtist}</Text>
+
+          <View style={[s.cover, {
+            marginTop: this.props.isShowingPlayer ? fullHeight * 0.10 : miniPlayerHeight * 0.35 / 4,
+            marginLeft: 15,
+            backgroundColor: 'transparent'
+          }]} elevation={50}>
+            {
+              this.props.currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + this.props.currentMusicAlbum}} />
+                : <Image style={s.cover} source={bgImg}/>
+            }
+          </View>
+
+          {
+            this.props.isShowingPlayer ?
+              <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
+                <MaterialIcon style={{opacity: repeatOpacity}} name={repeatImage} size={17} color="#606060" />
+              </TouchableOpacity> : null
+          }
+
+          <TouchableOpacity activeOpacity={1} style={s.backButton} onPress={this.rewind.bind(this)}>
+            <MaterialIcon name="skip-previous" size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
           </TouchableOpacity>
-        </Animated.View>
-        <Animated.View style={[s.lowerTriangle, {bottom: this.state.controlBgY}]}>
-          <TouchableOpacity activeOpacity={1} style={{width: 50, height: 50}} onPress={this.changeRepeat.bind(this)}>
-            <Image style={{opacity: repeatOpacity, tintColor: '#ee9459', transform: [{scale: 0.6}]}} source={repeatImage}/>
+
+          <TouchableOpacity activeOpacity={1} style={s.playButton} onPress={playButtonCb}>
+            <MaterialIcon name={this.props.isPlaying ? "pause" : "play-arrow"} size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={1} style={{width: 50, height: 50}} onPress={this.changeShuffle.bind(this)}>
-            <Image style={{opacity: shuffleOpacity, tintColor: '#ee9459', transform: [{scale: 0.6}]}} source={shuffleIcon}/>
+
+          <TouchableOpacity activeOpacity={1} style={s.forwardButton} onPress={this.fastForward.bind(this)}>
+            <MaterialIcon name="skip-next" size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
           </TouchableOpacity>
-        </Animated.View>
-        <Animated.View style={[s.lowerRectangle, {bottom: this.state.controlBgYLower}]}>
-          <TouchableOpacity style={s.backButton} onPress={this.rewind.bind(this)}>
-            <Image style={{tintColor: '#ee9459'}} source={backIcon}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={s.forwardButton} onPress={this.fastForward.bind(this)}>
-            <Image style={{tintColor: '#ee9459'}} source={forwardIcon}/>
-          </TouchableOpacity>
-          <View style={s.progressBg} />
-          <View style={[s.progressFill, {width: this.state.progressBarWidth}]} />
-          <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text>
-          <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text>
-        </Animated.View>
-      </View>
+
+          {
+            this.props.isShowingPlayer ?
+              <TouchableOpacity activeOpacity={1} style={s.mute} onPress={this.changeMute.bind(this)}>
+                <MaterialIcon name={this.props.mute ? 'volume-mute' : 'volume-up'} size={17} color="#606060" />
+              </TouchableOpacity> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View
+                style={s.progressBg}
+                hitSlop={{top: 10, bottom: 10, left: 0, right: 0}}
+                pointerEvents={'auto'}
+                onStartShouldSetResponder={() => true}
+                onResponderGrant={this.onProgressChange.bind(this)}
+                onResponderMove={this.onProgressChange.bind(this)}
+                onResponderRelease={this.onProgressChangeEnd.bind(this)}
+              /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View style={[s.progressFill, {width: this.state.progressBarWidth}]} /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text> : null
+          }
+        </View>
+      </TouchableOpacity>
     )
   }
 }
 
-const s = StyleSheet.create({
-  upperTriangle: {
+const miniPlayerHeight = 100;
+
+const mini = StyleSheet.create({
+  container: {
     position: 'absolute',
-    top: 0,
-    width: 0,
-    height: 0,
-    borderBottomWidth: 100,
-    borderBottomColor: 'transparent',
-    borderRightWidth: fullWidth,
-    borderRightColor: '#faf2e8',
-    borderStyle: 'solid'
-  },
-  lowerTriangle: {
-    position: 'absolute',
-    width: fullWidth,
+    bottom: 0,
     left: 0,
-    borderTopWidth: 100,
-    borderTopColor: 'transparent',
-    borderRightWidth: fullWidth,
-    borderRightColor: '#faf2e8',
-    borderStyle: 'solid'
-  },
-  lowerRectangle: {
-    backgroundColor: '#faf2e8',
-    position: 'absolute',
     width: fullWidth,
-    height: 150,
-    left: 0,
+    height: miniPlayerHeight,
+    backgroundColor: '#ffffff',
+    elevation: 10,
+  },
+  cover: {
+    width: miniPlayerHeight * 0.65,
+    height: miniPlayerHeight * 0.65,
+    borderRadius: miniPlayerHeight * 0.65 / 2,
   },
   title: {
+    fontFamily: 'roboto',
     position: 'absolute',
-    top: 70,
-    left: 10,
+    left: fullWidth * 0.25,
+    top: miniPlayerHeight * 0.18,
+    width: 130,
+    color: '#606060',
+    fontSize: 16,
+  },
+  artist: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    left: fullWidth * 0.25,
+    top: miniPlayerHeight * 0.30,
+    width: 130,
+    color: '#606060',
+    fontSize: 14,
+  },
+  backButton: {
+    position: 'absolute',
+    bottom: miniPlayerHeight * 0.5 - 30 / 4,
+    right: 120,
+  },
+  playButton: {
+    position: 'absolute',
+    bottom: miniPlayerHeight * 0.5 - 30 / 4,
+    right: 70,
+  },
+  forwardButton: {
+    position: 'absolute',
+    bottom: miniPlayerHeight * 0.5 - 30 / 4,
+    right: 20,
+  },
+});
+
+const full = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: fullWidth,
+    height: fullHeight,
+    backgroundColor: '#ffffff',
+    elevation: 10
+  },
+  cover: {
+    width: fullWidth * 0.75,
+    height: fullWidth * 0.75,
+    borderRadius: fullWidth * 0.75 / 2,
+    alignSelf: 'center',
+  },
+  title: {
+    fontFamily: 'roboto',
+    position: 'absolute',
+    left: fullWidth * 0.075,
+    top: fullHeight * 0.58,
     width: 250,
-    color: '#ffffff',
-    fontSize: 25
+    color: '#606060',
+    fontSize: 18
+  },
+  artist: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    left: fullWidth * 0.075,
+    top: fullHeight * 0.63,
+    width: 250,
+    color: '#a2a2a2',
+    fontSize: 16
   },
   closeButton: {
     left: fullWidth - 50,
@@ -193,14 +291,15 @@ const s = StyleSheet.create({
     height: 40,
     width: 40,
   },
-  bgImage: {
-    alignSelf: 'center',
-  },
   repeat: {
     position: 'absolute',
-    bottom: 15,
-    left: fullWidth - 60,
-    backgroundColor: '#000000',
+    bottom: fullHeight * 0.12,
+    left: fullWidth * 0.07,
+  },
+  mute: {
+    position: 'absolute',
+    bottom: fullHeight * 0.12,
+    right: fullWidth * 0.07,
   },
   shuffle: {
     position: 'absolute',
@@ -210,42 +309,46 @@ const s = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    bottom: 100,
+    bottom: fullHeight * 0.11,
     left: 80,
+  },
+  playButton: {
+    position: 'absolute',
+    bottom: fullHeight * 0.11,
+    left: fullWidth / 2 - 37 / 2
   },
   forwardButton: {
     position: 'absolute',
-    bottom: 100,
-    left: fullWidth - 80 - 48,
+    bottom: fullHeight * 0.11,
+    right: 80,
   },
   progressBg: {
     position: 'absolute',
-    height: 3,
-    width: 230,
-    bottom: 65,
-    left: 70,
-    backgroundColor: '#e9e6c9',
+    height: 1,
+    width: fullWidth * 0.85,
+    top: fullHeight * 0.75,
+    left: fullWidth * (1 - 0.85) / 2,
+    backgroundColor: '#d9d9d9',
   },
   progressFill: {
     position: 'absolute',
-    height: 3,
-    width: 110,
-    bottom: 65,
-    left: 70,
-    backgroundColor: '#ca6144',
+    height: 1,
+    top: fullHeight * 0.75,
+    left: fullWidth * (1 - 0.85) / 2,
+    backgroundColor: '#606060',
   },
   timeLeft: {
     position: 'absolute',
-    bottom: 57,
-    left: fullWidth - 50,
-    color: '#ee9459',
-    fontSize: 15,
+    top: fullHeight * 0.765,
+    right: 30,
+    color: '#606060',
+    fontSize: 11,
   },
   timePassed: {
     position: 'absolute',
-    bottom: 57,
-    left: 25,
-    color: '#ee9459',
-    fontSize: 15,
+    top: fullHeight * 0.765,
+    left: 30,
+    color: '#606060',
+    fontSize: 11,
   },
 });
