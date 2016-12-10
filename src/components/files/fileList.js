@@ -20,7 +20,7 @@ const bgImg = require('../../asset/test.jpg');
 
 const Header = (album, title) => {
   return (
-    <View style={{backgroundColor: '#ffffff', height: 80, width: fullWidth}}>
+    <View style={{backgroundColor: '#ffffff', height: 100, width: fullWidth}}>
       {
         album ? <Image style={{
           position: 'absolute',

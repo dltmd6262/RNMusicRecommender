@@ -130,7 +130,7 @@ export default class Player extends Component {
           <Text style={s.artist} numberOfLines={1}>{this.props.currentMusicArtist}</Text>
 
           <View style={[s.cover, {
-            marginTop: this.props.isShowingPlayer ? fullHeight * 0.12 : miniPlayerHeight * 0.35 / 4,
+            marginTop: this.props.isShowingPlayer ? fullHeight * 0.10 : miniPlayerHeight * 0.35 / 4,
             marginLeft: 15,
             backgroundColor: 'transparent'
           }]} elevation={50}>
@@ -229,7 +229,7 @@ const mini = StyleSheet.create({
     fontFamily: 'roboto_light',
     position: 'absolute',
     left: fullWidth * 0.25,
-    top: miniPlayerHeight * 0.40,
+    top: miniPlayerHeight * 0.30,
     width: 130,
     color: '#606060',
     fontSize: 14,

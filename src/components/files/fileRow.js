@@ -37,7 +37,7 @@ export const FolderRow = ({name, tracks, currentMusicAlbum, onSelected}) => {
   );
 };
 
-const fileRowHeight = 65;
+const fileRowHeight = 78;
 
 const s = StyleSheet.create({
   file: {
@@ -91,25 +91,25 @@ const s = StyleSheet.create({
     position: 'absolute',
     color: '#515151',
     fontSize: 15,
-    width: 220,
-    top: fileRowHeight * 0.35,
-    left: fullWidth * 0.23,
+    width: 250,
+    top: fileRowHeight * 0.20,
+    left: fullWidth * 0.15,
   },
   fileArtistText: {
     fontFamily: 'roboto_light',
     position: 'absolute',
     color: '#a2a2a2',
     fontSize: 15,
-    width: 220,
-    top: fileRowHeight * 0.6,
-    left: fullWidth * 0.23,
+    width: 250,
+    top: fileRowHeight * 0.46,
+    left: fullWidth * 0.15,
   },
   fileDurationText: {
     fontFamily: 'roboto_light',
     position: 'absolute',
     color: '#a2a2a2',
     fontSize: 15,
-    top: fileRowHeight * 0.35,
+    top: fileRowHeight * 0.20,
     right: fullWidth * 0.1,
   },
   folderText: {
