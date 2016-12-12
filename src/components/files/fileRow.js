@@ -14,6 +14,17 @@ var {
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
 const bgImg = require('../../asset/test.jpg');
 
+export const Header = (album, title) => {
+  const source = album ? {uri: 'file://' + album} : bgImg;
+
+  return (
+    <View style={{backgroundColor: '#ffffff', height: 100, width: fullWidth}}>
+      <Image style={s.headerCover} source={source} />
+      <Text numberOfLines={1} style={s.headerTitle} >{title}</Text>
+    </View>
+  )
+};
+
 export const FileRow = ({title, artist, duration, path, onSelected}) => {
   return (
     <TouchableOpacity style={s.file} activeOpacity={1} onPress={() => {onSelected(path, title)}}>
@@ -25,12 +36,11 @@ export const FileRow = ({title, artist, duration, path, onSelected}) => {
 };
 
 export const FolderRow = ({name, tracks, currentMusicAlbum, onSelected}) => {
+  const source = currentMusicAlbum ? {uri: 'file://' + currentMusicAlbum} : bgImg;
+
   return (
     <TouchableOpacity style={s.folder} activeOpacity={1} onPress={() => {onSelected(name)}}>
-      {
-        currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + currentMusicAlbum}} />
-          : <Image style={s.cover} source={bgImg}/>
-      }
+      <Image style={s.cover} source={source} />
       <Text numberOfLines={1} style={s.folderText}>{name}</Text>
       <Text numberOfLines={1} style={s.trackText}>{`${tracks} tracks`}</Text>
     </TouchableOpacity>
@@ -144,4 +154,21 @@ const s = StyleSheet.create({
     width: fullWidth * 0.48,
     height: fullWidth * 0.48,
   },
+  headerCover: {
+    position: 'absolute',
+    top: 100 * 0.5 / 2,
+    left: 20,
+    width: 100 * 0.5,
+    height: 100 * 0.5,
+    borderRadius: 100 * 0.5 / 2,
+  },
+  headerTitle: {
+    fontFamily: 'roboto_light',
+    position: 'absolute',
+    color: '#515151',
+    fontSize: 22,
+    width: 400,
+    top: 100 * 0.5 / 2 + 5,
+    left: fullWidth * 0.23,
+  }
 });
