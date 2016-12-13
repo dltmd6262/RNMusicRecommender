@@ -78,7 +78,7 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
     @ReactMethod
     public void playNewMusic(String path, Promise promise) {
         Uri filePath = Uri.fromFile(new File(path));
-        Log.w("com.media", filePath.toString());
+
         try {
             AudioManager am = (AudioManager) getReactApplicationContext().getSystemService(getReactApplicationContext().AUDIO_SERVICE);
             int permissionResult = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -101,41 +101,12 @@ public class MusicPlayer extends ReactContextBaseJavaModule {
             this.currentMusic.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    WritableMap result = Arguments.createMap();
                     rctContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("MusicCompleted", result);
+                            .emit("MusicCompleted", Arguments.createMap());
                 }
             });
 
-            WritableMap result = Arguments.createMap();
-            result.putInt("duration", this.currentMusic.getDuration());
-
-            Cursor cur = rctContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, "_data = '" + filePath.getPath() + "'", null, null);
-            if (cur != null && cur.moveToFirst()) {
-                result.putString("title", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
-                result.putString("artist", cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST)));
-
-                Cursor albumCur = rctContext.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                        new String[] {MediaStore.Audio.Albums.ALBUM_ART},
-                        MediaStore.Audio.Albums._ID + '=' + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)),
-                        null, null
-                );
-
-                cur.close();
-
-                if (albumCur != null && albumCur.moveToFirst()) {
-                    String albumPath = albumCur.getString(albumCur.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-                    result.putString("album", albumPath);
-                    albumCur.close();
-                    Log.i("com.media", "Album path is = " + albumPath);
-                } else {
-                    Log.i("com.media", "No album found");
-                }
-            } else {
-                Log.i("com.media", "No music metadata found");
-            }
-
-            promise.resolve(result);
+            promise.resolve(Arguments.createMap());
         } catch (Exception e) {
             promise.reject(e);
             Log.e("com.media", e.toString());

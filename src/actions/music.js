@@ -14,23 +14,23 @@ export const showMusicPlayer = (show) => {
 
 export const PLAY_NEW_MUSIC = 'PLAY_NEW_MUSIC';
 
-const dispatchPlayNewMusic = (name, duration, title, artist, album) => {
+const dispatchPlayNewMusic = (musicInfo) => {
   return {
     type: PLAY_NEW_MUSIC,
-    currentMusicDuration: duration,
-    currentMusic: name,
-    currentMusicTitle: title,
-    currentMusicArtist: artist,
-    currentMusicAlbum: album,
+    currentMusicDuration: musicInfo.duration,
+    currentMusic: musicInfo.fileName,
+    currentMusicTitle: musicInfo.title,
+    currentMusicArtist: musicInfo.artist,
+    currentMusicAlbum: musicInfo.album,
     isPlaying: true,
   };
 };
 
-export const playNewMusic = (path, name) => {
+export const playNewMusic = (musicInfo) => {
   return dispatch => {
     return runSafe(function *() {
-      const result = yield NativeModules.MusicPlayer.playNewMusic(path);
-      dispatch(dispatchPlayNewMusic(name, result.duration, result.title, result.artist, result.album));
+      yield NativeModules.MusicPlayer.playNewMusic(musicInfo.path);
+      dispatch(dispatchPlayNewMusic(musicInfo));
     });
   }
 };
@@ -43,7 +43,7 @@ export const rewind = (prev, currentMusic) => {
       const currentIndex = _.findIndex(playlist, m => m.fileName === currentMusic);
       const previousMusic = isShuffle ? _.sample(playlist) :
         playlist[currentIndex === 0 ? playlist.length - 1 : currentIndex - 1];
-      playNewMusic(previousMusic.path, previousMusic.fileName)(dispatch);
+      playNewMusic(previousMusic)(dispatch);
     } else {
       NativeModules.MusicPlayer.jumpTo(0);
     }
@@ -66,7 +66,7 @@ export const fastForward = (currentMusic) => {
     const currentIndex = _.findIndex(playlist, m => m.fileName === currentMusic);
     const nextMusic = isShuffle ? _.sample(playlist) :
       playlist[currentIndex === (playlist.length - 1) ? 0 : currentIndex + 1];
-    playNewMusic(nextMusic.path, nextMusic.fileName)(dispatch);
+    playNewMusic(nextMusic)(dispatch);
   }
 };
 

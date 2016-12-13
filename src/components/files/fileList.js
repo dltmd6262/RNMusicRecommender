@@ -48,17 +48,16 @@ export default class FileList extends Component {
     this.props.updateCurrentFolder(folderName);
   }
 
-  startPlayingMusic(path, name) {
+  startPlayingMusic(musicInfo) {
     this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === this.props.currentFolder).files);
     this.props.showMusicPlayer(true);
-    this.props.playNewMusic(path, name);
+    this.props.playNewMusic(musicInfo);
   }
 
   render() {
     if (this.props.isShowingPlayer) {this.wasShowingPlayer = true}
     const view = this.props.currentFolder ? FileRow : FolderRow;
-    const onSelected = this.props.currentFolder ?
-      this.startPlayingMusic.bind(this) : this.showMusicInFolder.bind(this);
+    const onSelected = this.props.currentFolder ? this.startPlayingMusic : this.showMusicInFolder;
 
     const data = this.props.currentFolder ?
       this.props.files.find(f => f.name === this.props.currentFolder).files.map(f => {
@@ -67,14 +66,14 @@ export default class FileList extends Component {
           artist: f.artist,
           duration: milliToTimeString(f.duration),
           path: f.path,
-          onSelected
+          onSelected: onSelected.bind(this, f)
         };
       }) : this.props.files.map(f => {
         return {
           name: f.name,
           tracks: f.files.length,
           currentMusicAlbum: f.files.map(file => file.album).find(f => f),
-          onSelected
+          onSelected: onSelected.bind(this, f.name)
         };
       });
 

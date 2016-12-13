@@ -4,6 +4,7 @@ import React from 'react';
 import ReactNative from 'react-native';
 
 var {
+  View,
   Image,
   Text,
   TouchableOpacity,

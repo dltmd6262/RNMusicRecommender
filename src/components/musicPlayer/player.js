@@ -272,11 +272,11 @@ const full = StyleSheet.create({
     alignSelf: 'center',
   },
   coverContainer: {
-    width: miniPlayerHeight * 0.65,
-    height: miniPlayerHeight * 0.65,
-    borderRadius: miniPlayerHeight * 0.65 / 2,
+    width: fullWidth * 0.75,
+    height: fullWidth * 0.75,
+    borderRadius: fullWidth * 0.75 / 2,
     marginTop: fullHeight * 0.10,
-    marginLeft: 15,
+    marginLeft: fullWidth * 0.25 / 2,
     backgroundColor: 'transparent'
   },
   title: {
