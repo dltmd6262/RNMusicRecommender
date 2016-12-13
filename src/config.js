@@ -1,12 +1,17 @@
-export default {
-  address: 'http://127.0.0.1:3000',
-  soundCloud: '334ecd4221d761eec2d1e2a2984e1cf7',
-}
-
 /**
  * @typedef {Object} FileStructureResult
- * @property {Array<{fileName: string, path: string}>} files
+ * @property {Array.<MusicInfo>} files
  * @property {string} name
+ */
+
+/**
+ * @typedef {Object} MusicInfo
+ * @property {string} artist
+ * @property {string} title
+ * @property {string} path
+ * @property {string} fileName
+ * @property {string} duration
+ * @property {string} album
  */
 
 /**
@@ -21,15 +26,7 @@ var NativeModuleMockup = {
      * @return {Promise<>}
      */
     playNewMusic: function (path) {},
-
-    /**
-     * @return {Promise<>}
-     */
     playCurrentMusic: function () {},
-
-    /**
-     * @return {Promise<>}
-     */
     pauseCurrentMusic: function () {},
 
     /**
@@ -47,5 +44,6 @@ var NativeModuleMockup = {
      * @return {Promise<Array<FileStructureResult>>}
      */
     getFoldersWithMusic: function () {},
+    stopSplashScreen: function() {},
   },
 };
