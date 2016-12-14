@@ -23,6 +23,7 @@ export default class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      progressCircleX: fullWidth * 0.15 / 2,
       progressBarWidth: 0,
       currentProgress: milliToTimeString(0),
     };
@@ -40,6 +41,7 @@ export default class Player extends Component {
       if (!this.dragging && this.props.isShowingPlayer) {
         this.setState({
           currentProgress: progress.currentPosition,
+          progressCircleX: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85) + fullWidth * 0.15 / 2,
           progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85),
         });
       }
@@ -85,6 +87,7 @@ export default class Player extends Component {
   onProgressChange(e) {
     this.dragging = true;
     this.setState({
+      progressCircleX: e.nativeEvent.pageX,
       progressBarWidth: e.nativeEvent.pageX - fullWidth * 0.15 / 2,
     });
   }
@@ -166,7 +169,7 @@ export default class Player extends Component {
             this.props.isShowingPlayer ?
               <View
                 style={s.progressBg}
-                hitSlop={{top: 10, bottom: 10, left: 0, right: 0}}
+                hitSlop={{top: 20, bottom: 20, left: 0, right: 0}}
                 pointerEvents={'auto'}
                 onStartShouldSetResponder={() => true}
                 onResponderGrant={this.onProgressChange.bind(this)}
@@ -178,6 +181,16 @@ export default class Player extends Component {
           {
             this.props.isShowingPlayer ?
               <View style={[s.progressFill, {width: this.state.progressBarWidth}]} /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View style={[s.progressCircleFill, {left: this.state.progressCircleX - 7 / 2}]} /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View style={[s.progressCircleOutline, {left: this.state.progressCircleX - 6}]} /> : null
           }
 
           {
@@ -348,6 +361,22 @@ const full = StyleSheet.create({
     top: fullHeight * 0.75,
     left: fullWidth * (1 - 0.85) / 2,
     backgroundColor: '#606060',
+  },
+  progressCircleFill: {
+    position: 'absolute',
+    width: 7,
+    height: 7,
+    borderRadius: 7 / 2,
+    top: fullHeight * 0.75 - 7 / 2,
+    backgroundColor: '#606060'
+  },
+  progressCircleOutline: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    top: fullHeight * 0.75 - 6,
+    backgroundColor: 'rgba(162, 162, 162, 0.3)'
   },
   timeLeft: {
     position: 'absolute',
