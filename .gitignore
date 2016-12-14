@@ -42,3 +42,7 @@ android/keystores/debug.keystore
 
 # rust
 server/target
+android/app/gradlew
+android/app/gradlew.bat
+android/app/gradle/wrapper/gradle-wrapper.jar
+android/app/gradle/wrapper/gradle-wrapper.properties
