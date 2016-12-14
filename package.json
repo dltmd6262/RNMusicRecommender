@@ -7,12 +7,12 @@
     "start": "./node_modules/react-native/packager/packager.sh start --reset-cache",
     "clean": "find ./node_modules -name react-packager -prune -o -name '.babelrc' -print | xargs rm -f",
     "postinstall": "npm run clean",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register -c -t 10000 --check-leaks ./src/test",
-    "test-cov": "./node_modules/.bin/istanbul --config=./.istanbul.yml cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register -R spec src/test"
+    "test": "",
+    "__test": "./node_modules/.bin/mocha --compilers js:babel-core/register -c -t 10000 --check-leaks ./src/test",
+    "__test-cov": "./node_modules/.bin/istanbul --config=./.istanbul.yml cover ./node_modules/.bin/_mocha -- --compilers js:babel-core/register -R spec src/test"
   },
   "dependencies": {
     "bluebird": "^3.3.3",
-    "co": "^4.6.0",
     "lodash": "^4.3.0",
     "react": "^15.3.1",
     "react-native": "^0.35.0",

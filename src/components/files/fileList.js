@@ -2,55 +2,14 @@
 
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
-import {FileRow, FolderRow} from './fileRow';
-import {NativeModules} from 'react-native';
+import {FileRow, FolderRow, Header} from './fileRow';
 import {milliToTimeString} from '../../util';
 
 var {
   View,
-  Image,
-  Text,
   ListView,
-  Dimensions,
   BackAndroid,
 } = ReactNative;
-
-const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
-const bgImg = require('../../asset/test.jpg');
-
-const Header = (album, title) => {
-  return (
-    <View style={{backgroundColor: '#ffffff', height: 100, width: fullWidth}}>
-      {
-        album ? <Image style={{
-          position: 'absolute',
-          top: 100 * 0.5 / 2,
-          left: 20,
-          width: 100 * 0.5,
-          height: 100 * 0.5,
-          borderRadius: 100 * 0.5 / 2,
-        }} source={{uri: 'file://' + album}} /> :
-          <Image style={{
-            position: 'absolute',
-            top: 100 * 0.5 / 2,
-            left: 20,
-            width: 100 * 0.5,
-            height: 100 * 0.5,
-            borderRadius: 100 * 0.5 / 2,
-          }} source={bgImg} />
-      }
-      <Text numberOfLines={1} style={{
-        fontFamily: 'roboto_light',
-        position: 'absolute',
-        color: '#515151',
-        fontSize: 22,
-        width: 400,
-        top: 100 * 0.5 / 2 + 5,
-        left: fullWidth * 0.23,
-      }} >{title}</Text>
-    </View>
-  )
-};
 
 export default class FileList extends Component {
   constructor(props) {
@@ -89,17 +48,16 @@ export default class FileList extends Component {
     this.props.updateCurrentFolder(folderName);
   }
 
-  startPlayingMusic(path, name) {
+  startPlayingMusic(musicInfo) {
     this.props.updateCurrentPlaylist(this.props.files.find(f => f.name === this.props.currentFolder).files);
     this.props.showMusicPlayer(true);
-    this.props.playNewMusic(path, name);
+    this.props.playNewMusic(musicInfo);
   }
 
   render() {
     if (this.props.isShowingPlayer) {this.wasShowingPlayer = true}
     const view = this.props.currentFolder ? FileRow : FolderRow;
-    const onSelected = this.props.currentFolder ?
-      this.startPlayingMusic.bind(this) : this.showMusicInFolder.bind(this);
+    const onSelected = this.props.currentFolder ? this.startPlayingMusic : this.showMusicInFolder;
 
     const data = this.props.currentFolder ?
       this.props.files.find(f => f.name === this.props.currentFolder).files.map(f => {
@@ -108,14 +66,14 @@ export default class FileList extends Component {
           artist: f.artist,
           duration: milliToTimeString(f.duration),
           path: f.path,
-          onSelected
+          onSelected: onSelected.bind(this, f)
         };
       }) : this.props.files.map(f => {
         return {
           name: f.name,
           tracks: f.files.length,
           currentMusicAlbum: f.files.map(file => file.album).find(f => f),
-          onSelected
+          onSelected: onSelected.bind(this, f.name)
         };
       });
 
@@ -126,7 +84,8 @@ export default class FileList extends Component {
         ref={ref => this.listView = ref}
         dataSource={this.state.dataSource.cloneWithRows(data)}
         renderRow={view}
-        renderHeader={this.props.currentFolder ? Header.bind(this, currentFolder.files.map(file => file.album).find(f => f), currentFolder.name) : null}
+        renderHeader={this.props.currentFolder ?
+          Header.bind(this, currentFolder.files.map(file => file.album).find(f => f), currentFolder.name) : null}
         contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}
         style={{backgroundColor: '#f5f5f5'}}
         renderSeparator={this.createSeparator}

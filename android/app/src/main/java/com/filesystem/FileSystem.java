@@ -24,6 +24,10 @@ public class FileSystem extends ReactContextBaseJavaModule {
         return "FileSystem";
     }
 
+    /**
+     * AsyncTask to query for all music files in storage.
+     * It takes the react application context for query and returns array of folders and its contents
+     */
     private class SearchForMusicFiles extends AsyncTask<ReactApplicationContext, Integer, WritableArray> {
         Promise fileSearchPromise = null;
 
@@ -85,6 +89,10 @@ public class FileSystem extends ReactContextBaseJavaModule {
         }
     }
 
+    /**
+     * JS method to get complete list of all music and its info.
+     * @param promise
+     */
     @ReactMethod
     public void getFoldersWithMusic(Promise promise) {
         SearchForMusicFiles search = new SearchForMusicFiles();
@@ -92,6 +100,9 @@ public class FileSystem extends ReactContextBaseJavaModule {
         search.execute(getReactApplicationContext());
     }
 
+    /**
+     * This call will stop and remove the splash screen from the main activity
+     */
     @ReactMethod
     public void stopSplashScreen() {
         MainActivity main = (MainActivity) getCurrentActivity();

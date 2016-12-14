@@ -59,16 +59,6 @@ export default class Player extends Component {
       console.log('AUDIO_FOCUS_LOSS_TRANSIENT');
       this.props.pauseCurrentMusic();
     });
-
-    DeviceEventEmitter.addListener('AudioFocusGain', () => {
-      console.log('AUDIO_FOCUS_GAIN');
-      this.props.playCurrentMusic();
-    });
-
-    DeviceEventEmitter.addListener('AudioFocusGainTransient', () => {
-      console.log('AUDIO_FOCUS_GAIN_TRANSIENT');
-      this.props.playCurrentMusic();
-    });
   }
 
   rewind() {
@@ -82,10 +72,6 @@ export default class Player extends Component {
     if (this.props.currentMusic) {
       this.props.fastForward(this.props.currentMusic);
     }
-  }
-
-  changeShuffle() {
-    this.props.changeShuffle(!this.props.shuffle);
   }
 
   changeRepeat() {
@@ -112,56 +98,66 @@ export default class Player extends Component {
 
   render() {
     const s = this.props.isShowingPlayer ? full : mini;
+    const source = this.props.currentMusicAlbum ? {uri: 'file://' + this.props.currentMusicAlbum} : bgImg;
     const playButtonCb = this.props.isPlaying ? this.props.pauseCurrentMusic : this.props.playCurrentMusic;
     const repeatOpacity = this.props.repeat === c.RepeatModes.None ? 0.7 : 1;
     const repeatImage = this.props.repeat === c.RepeatModes.One ? 'repeat-one' : 'repeat';
+    const iconSize = this.props.isShowingPlayer ? 37 : 32;
 
     return (
       <TouchableOpacity activeOpacity={1} style={s.container} onPress={this.props.isShowingPlayer ? () => {} : this.props.showMusicPlayer.bind(this, true)}>
         <View style={s.container}>
 
           {
-            this.props.isShowingPlayer ? <TouchableOpacity style={{width: 35, height: 35, position: 'absolute', top: 33, left: 18}} activeOpacity={1} onPress={this.props.showMusicPlayer.bind(this, false)}>
-              <MaterialIcon name="arrow-downward" size={35} color="#a2a2a2" />
-            </TouchableOpacity> : null
+            this.props.isShowingPlayer ?
+              <TouchableOpacity
+                style={s.backBtnContainer}
+                activeOpacity={1}
+                onPress={this.props.showMusicPlayer.bind(this, false)}
+              >
+                <MaterialIcon name="arrow-downward" size={35} color="#a2a2a2" />
+              </TouchableOpacity> : null
           }
 
           <Text style={s.title} numberOfLines={1}>{this.props.currentMusicTitle}</Text>
           <Text style={s.artist} numberOfLines={1}>{this.props.currentMusicArtist}</Text>
 
-          <View style={[s.cover, {
-            marginTop: this.props.isShowingPlayer ? fullHeight * 0.10 : miniPlayerHeight * 0.35 / 4,
-            marginLeft: 15,
-            backgroundColor: 'transparent'
-          }]} elevation={50}>
-            {
-              this.props.currentMusicAlbum ? <Image style={s.cover} source={{uri: 'file://' + this.props.currentMusicAlbum}} />
-                : <Image style={s.cover} source={bgImg}/>
-            }
+          <View style={s.coverContainer} elevation={30}>
+            <Image style={s.cover} source={source} />
           </View>
 
           {
             this.props.isShowingPlayer ?
-              <TouchableOpacity activeOpacity={1} style={s.repeat} onPress={this.changeRepeat.bind(this)}>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={s.repeat}
+                onPress={this.changeRepeat.bind(this)}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+              >
                 <MaterialIcon style={{opacity: repeatOpacity}} name={repeatImage} size={17} color="#606060" />
               </TouchableOpacity> : null
           }
 
           <TouchableOpacity activeOpacity={1} style={s.backButton} onPress={this.rewind.bind(this)}>
-            <MaterialIcon name="skip-previous" size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
+            <MaterialIcon name="skip-previous" size={iconSize} color="#606060" />
           </TouchableOpacity>
 
           <TouchableOpacity activeOpacity={1} style={s.playButton} onPress={playButtonCb}>
-            <MaterialIcon name={this.props.isPlaying ? "pause" : "play-arrow"} size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
+            <MaterialIcon name={this.props.isPlaying ? "pause" : "play-arrow"} size={iconSize} color="#606060" />
           </TouchableOpacity>
 
           <TouchableOpacity activeOpacity={1} style={s.forwardButton} onPress={this.fastForward.bind(this)}>
-            <MaterialIcon name="skip-next" size={this.props.isShowingPlayer ? 37 : 32} color="#606060" />
+            <MaterialIcon name="skip-next" size={iconSize} color="#606060" />
           </TouchableOpacity>
 
           {
             this.props.isShowingPlayer ?
-              <TouchableOpacity activeOpacity={1} style={s.mute} onPress={this.changeMute.bind(this)}>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={s.mute}
+                onPress={this.changeMute.bind(this)}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+              >
                 <MaterialIcon name={this.props.mute ? 'volume-mute' : 'volume-up'} size={17} color="#606060" />
               </TouchableOpacity> : null
           }
@@ -216,6 +212,14 @@ const mini = StyleSheet.create({
     height: miniPlayerHeight * 0.65,
     borderRadius: miniPlayerHeight * 0.65 / 2,
   },
+  coverContainer: {
+    width: miniPlayerHeight * 0.65,
+    height: miniPlayerHeight * 0.65,
+    borderRadius: miniPlayerHeight * 0.65 / 2,
+    marginTop: miniPlayerHeight * 0.35 / 4,
+    marginLeft: 15,
+    backgroundColor: 'transparent'
+  },
   title: {
     fontFamily: 'roboto',
     position: 'absolute',
@@ -229,7 +233,7 @@ const mini = StyleSheet.create({
     fontFamily: 'roboto_light',
     position: 'absolute',
     left: fullWidth * 0.25,
-    top: miniPlayerHeight * 0.30,
+    top: miniPlayerHeight * 0.4,
     width: 130,
     color: '#606060',
     fontSize: 14,
@@ -267,6 +271,14 @@ const full = StyleSheet.create({
     borderRadius: fullWidth * 0.75 / 2,
     alignSelf: 'center',
   },
+  coverContainer: {
+    width: fullWidth * 0.75,
+    height: fullWidth * 0.75,
+    borderRadius: fullWidth * 0.75 / 2,
+    marginTop: fullHeight * 0.10,
+    marginLeft: fullWidth * 0.25 / 2,
+    backgroundColor: 'transparent'
+  },
   title: {
     fontFamily: 'roboto',
     position: 'absolute',
@@ -280,7 +292,7 @@ const full = StyleSheet.create({
     fontFamily: 'roboto_light',
     position: 'absolute',
     left: fullWidth * 0.075,
-    top: fullHeight * 0.63,
+    top: fullHeight * 0.621,
     width: 250,
     color: '#a2a2a2',
     fontSize: 16
@@ -351,4 +363,11 @@ const full = StyleSheet.create({
     color: '#606060',
     fontSize: 11,
   },
+  backBtnContainer: {
+    width: 35,
+    height: 35,
+    position: 'absolute',
+    top: 33,
+    left: 18
+  }
 });

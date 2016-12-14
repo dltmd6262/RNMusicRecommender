@@ -32,7 +32,6 @@ public class MainActivity extends ReactActivity {
         ((ViewGroup) splash.getParent()).setClipChildren(false);
 
         Animation translation = AnimationUtils.loadAnimation(this, R.anim.translate);
-        translation.setInterpolator(new LinearInterpolator());
         splash.findViewById(R.id.splash_screen).startAnimation(translation);
     }
 

@@ -8,19 +8,11 @@ import Reducer from './reducers/index';
 import thunk from 'redux-thunk';
 import c from './constants';
 
-import {fetchNewsfeedData} from './actions/newsfeed';
 import {updateFileStructure} from './actions/files';
 
 import App from './containers/app';
 
 let initialState = {
-  Newsfeed: {
-    newsfeedCardData: [],
-    isRefreshing: false,
-  },
-  User: {
-    uid: null,
-  },
   Files: {
     files: [],
     playlist: [],
@@ -54,7 +46,6 @@ BackAndroid.addEventListener('preventDefault', () => {
 });
 
 // Initial db call for newsfeed data
-store.dispatch(fetchNewsfeedData());
 store.dispatch(updateFileStructure());
 
 export default AppWithStore;

@@ -17,8 +17,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    playNewMusic: (path, name) => {
-      dispatch(playNewMusic(path, name));
+    playNewMusic: (musicInfo) => {
+      dispatch(playNewMusic(musicInfo));
     },
     showMusicPlayer: (show) => {
       dispatch(showMusicPlayer(show));
