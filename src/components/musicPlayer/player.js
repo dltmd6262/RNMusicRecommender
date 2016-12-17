@@ -14,6 +14,8 @@ const {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  Animated,
+  Easing,
 } = ReactNative;
 
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
@@ -23,6 +25,7 @@ export default class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      playerHeight: new Animated.Value(miniPlayerHeight),
       progressCircleX: fullWidth * 0.15 / 2,
       progressBarWidth: 0,
       currentProgress: milliToTimeString(0),
@@ -107,9 +110,19 @@ export default class Player extends Component {
     const repeatImage = this.props.repeat === c.RepeatModes.One ? 'repeat-one' : 'repeat';
     const iconSize = this.props.isShowingPlayer ? 37 : 32;
 
+    Animated.timing(
+      this.state.playerHeight,
+      {
+        toValue: this.props.isShowingPlayer ? fullHeight : miniPlayerHeight,
+        duration: 250,
+        easing: Easing.out(Easing.cubic)
+      }
+    ).start();
+
     return (
+      <Animated.View style={[s.container, {height: this.state.playerHeight}]}>
       <TouchableOpacity activeOpacity={1} style={s.container} onPress={this.props.isShowingPlayer ? () => {} : this.props.showMusicPlayer.bind(this, true)}>
-        <View style={s.container}>
+
 
           {
             this.props.isShowingPlayer ?
@@ -202,8 +215,8 @@ export default class Player extends Component {
             this.props.isShowingPlayer ?
               <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text> : null
           }
-        </View>
       </TouchableOpacity>
+      </Animated.View>
     )
   }
 }
