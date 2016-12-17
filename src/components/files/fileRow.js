@@ -48,7 +48,7 @@ export const FolderRow = ({name, tracks, currentMusicAlbum, onSelected}) => {
   );
 };
 
-const fileRowHeight = 78;
+const fileRowHeight = 70;
 
 const s = StyleSheet.create({
   file: {
@@ -167,7 +167,7 @@ const s = StyleSheet.create({
     fontFamily: 'roboto_light',
     position: 'absolute',
     color: '#515151',
-    fontSize: 22,
+    fontSize: 20,
     width: 400,
     top: 100 * 0.5 / 2 + 5,
     left: fullWidth * 0.23,
