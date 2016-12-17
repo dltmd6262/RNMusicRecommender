@@ -14,6 +14,8 @@ const {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  Animated,
+  Easing,
 } = ReactNative;
 
 const {width: fullWidth, height: fullHeight} = Dimensions.get('window');
@@ -23,6 +25,8 @@ export default class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      playerHeight: new Animated.Value(miniPlayerHeight),
+      progressCircleX: fullWidth * 0.15 / 2,
       progressBarWidth: 0,
       currentProgress: milliToTimeString(0),
     };
@@ -40,6 +44,7 @@ export default class Player extends Component {
       if (!this.dragging && this.props.isShowingPlayer) {
         this.setState({
           currentProgress: progress.currentPosition,
+          progressCircleX: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85) + fullWidth * 0.15 / 2,
           progressBarWidth: progress.currentPosition / this.props.currentMusicDuration * (fullWidth * 0.85),
         });
       }
@@ -85,6 +90,7 @@ export default class Player extends Component {
   onProgressChange(e) {
     this.dragging = true;
     this.setState({
+      progressCircleX: e.nativeEvent.pageX,
       progressBarWidth: e.nativeEvent.pageX - fullWidth * 0.15 / 2,
     });
   }
@@ -104,9 +110,19 @@ export default class Player extends Component {
     const repeatImage = this.props.repeat === c.RepeatModes.One ? 'repeat-one' : 'repeat';
     const iconSize = this.props.isShowingPlayer ? 37 : 32;
 
+    Animated.timing(
+      this.state.playerHeight,
+      {
+        toValue: this.props.isShowingPlayer ? fullHeight : miniPlayerHeight,
+        duration: 250,
+        easing: Easing.out(Easing.cubic)
+      }
+    ).start();
+
     return (
+      <Animated.View style={[s.container, {height: this.state.playerHeight}]}>
       <TouchableOpacity activeOpacity={1} style={s.container} onPress={this.props.isShowingPlayer ? () => {} : this.props.showMusicPlayer.bind(this, true)}>
-        <View style={s.container}>
+
 
           {
             this.props.isShowingPlayer ?
@@ -166,7 +182,7 @@ export default class Player extends Component {
             this.props.isShowingPlayer ?
               <View
                 style={s.progressBg}
-                hitSlop={{top: 10, bottom: 10, left: 0, right: 0}}
+                hitSlop={{top: 20, bottom: 20, left: 0, right: 0}}
                 pointerEvents={'auto'}
                 onStartShouldSetResponder={() => true}
                 onResponderGrant={this.onProgressChange.bind(this)}
@@ -182,6 +198,16 @@ export default class Player extends Component {
 
           {
             this.props.isShowingPlayer ?
+              <View style={[s.progressCircleFill, {left: this.state.progressCircleX - 7 / 2}]} /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
+              <View style={[s.progressCircleOutline, {left: this.state.progressCircleX - 6}]} /> : null
+          }
+
+          {
+            this.props.isShowingPlayer ?
               <Text style={s.timeLeft}>{milliToTimeString(this.props.currentMusicDuration)}</Text> : null
           }
 
@@ -189,8 +215,8 @@ export default class Player extends Component {
             this.props.isShowingPlayer ?
               <Text style={s.timePassed}>{milliToTimeString(this.state.currentProgress)}</Text> : null
           }
-        </View>
       </TouchableOpacity>
+      </Animated.View>
     )
   }
 }
@@ -348,6 +374,22 @@ const full = StyleSheet.create({
     top: fullHeight * 0.75,
     left: fullWidth * (1 - 0.85) / 2,
     backgroundColor: '#606060',
+  },
+  progressCircleFill: {
+    position: 'absolute',
+    width: 7,
+    height: 7,
+    borderRadius: 7 / 2,
+    top: fullHeight * 0.75 - 7 / 2,
+    backgroundColor: '#606060'
+  },
+  progressCircleOutline: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    top: fullHeight * 0.75 - 6,
+    backgroundColor: 'rgba(162, 162, 162, 0.3)'
   },
   timeLeft: {
     position: 'absolute',
