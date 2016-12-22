@@ -112,7 +112,7 @@ const s = StyleSheet.create({
     color: '#a2a2a2',
     fontSize: 15,
     width: 250,
-    top: fileRowHeight * 0.46,
+    top: fileRowHeight * 0.52,
     left: fullWidth * 0.15,
   },
   fileDurationText: {
@@ -169,7 +169,7 @@ const s = StyleSheet.create({
     color: '#515151',
     fontSize: 20,
     width: 400,
-    top: 100 * 0.5 / 2 + 5,
+    top: ((100 - 20) / 2) - (20 / 2) + 5,
     left: fullWidth * 0.23,
   }
 });
