@@ -1,33 +1,33 @@
-'use strict';
+"use strict";
 
-import React from 'react';
-import {UIManager, Platform, BackAndroid} from 'react-native';
-import {Provider} from 'react-redux'
-import {createStore, applyMiddleware} from 'redux'
-import Reducer from './reducers/index';
-import thunk from 'redux-thunk';
-import c from './constants';
+import React from "react";
+import { UIManager, Platform, BackHandler } from "react-native";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import Reducer from "./reducers/index";
+import thunk from "redux-thunk";
+import c from "./constants";
 
-import {updateFileStructure} from './actions/files';
+import { updateFileStructure } from "./actions/files";
 
-import App from './containers/app';
+import App from "./containers/app";
 
 let initialState = {
   Files: {
     files: [],
-    playlist: [],
+    playlist: []
   },
   Music: {
-    currentPosition: '0:00',
+    currentPosition: "0:00",
     isPlaying: false,
-    currentMusic: '',
+    currentMusic: "",
     isShowingPlayer: false,
     shuffle: false,
-    repeat: c.RepeatModes.None,
-  },
+    repeat: c.RepeatModes.None
+  }
 };
 
-if (Platform.OS === 'android') {
+if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
@@ -36,12 +36,12 @@ let store = createStore(Reducer, initialState, applyMiddleware(thunk));
 const AppWithStore = () => {
   return (
     <Provider store={store}>
-      <App/>
+      <App />
     </Provider>
-  )
+  );
 };
 
-BackAndroid.addEventListener('preventDefault', () => {
+BackHandler.addEventListener("preventDefault", () => {
   return true;
 });
 

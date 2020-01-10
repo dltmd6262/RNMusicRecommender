@@ -64,7 +64,9 @@ import com.android.build.OutputFile
  *   extraPackagerArgs: []
  * ]
  */
-
+project.ext.react = [ entryFile: "index.android.js", enableHermes: false ]
+def jscFlavor = 'org.webkit:android-jsc:+'
+def enableHermes = project.ext.react.get("enableHermes", false);
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**
@@ -83,13 +85,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.real_pitch"
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         ndk {
@@ -135,7 +137,12 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-vector-icons')
+    if (enableHermes) {
+       def hermesPath = "../../node_modules/hermesvm/android/";
+       debugImplementation files(hermesPath + "hermes-debug.aar")
+       releaseImplementation files(hermesPath + "hermes-release.aar")
+    }
+   else { implementation jscFlavor }
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
