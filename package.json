@@ -36,7 +36,7 @@
     "istanbul": "^1.1.0-alpha.1",
     "jetifier": "^1.6.5",
     "metro-react-native-babel-preset": "^0.56.4",
-    "mocha": "^7.0.0",
+    "mocha": "^10.2.0",
     "mocha-lcov-reporter": "^1.2.0"
   }
 }
